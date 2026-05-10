@@ -6,13 +6,6 @@ from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-try:
-    # Prefer classic retrievers path for better compatibility across Python versions.
-    from langchain_classic.retrievers.ensemble import EnsembleRetriever
-except Exception:
-    from langchain.retrievers import EnsembleRetriever
-
-
 SECTION_TITLES = [
     "药品名称",
     "成份",
@@ -520,6 +513,50 @@ class RetrieverBundle(NamedTuple):
     all_documents: tuple[Document, ...] = ()
 
 
+class WeightedHybridRetriever:
+    """Simple weighted rank fusion without langchain EnsembleRetriever."""
+
+    def __init__(
+        self,
+        bm25_retriever,
+        vector_retriever,
+        *,
+        bm25_weight: float,
+        vector_weight: float,
+    ):
+        self.bm25_retriever = bm25_retriever
+        self.vector_retriever = vector_retriever
+        self.bm25_weight = bm25_weight
+        self.vector_weight = vector_weight
+
+    def invoke(self, query: str) -> List[Document]:
+        bm25_docs = self.bm25_retriever.invoke(query)
+        vector_docs = self.vector_retriever.invoke(query)
+
+        merged: dict[tuple, tuple[float, Document]] = {}
+
+        def _ingest(docs: Sequence[Document], weight: float):
+            for rank, doc in enumerate(docs, 1):
+                metadata = doc.metadata or {}
+                key = (
+                    metadata.get("chunk_id"),
+                    metadata.get("source_name"),
+                    metadata.get("page"),
+                    metadata.get("section_title"),
+                    doc.page_content,
+                )
+                score = weight / rank
+                current = merged.get(key)
+                if current is None or score > current[0]:
+                    merged[key] = (score, doc)
+
+        _ingest(bm25_docs, self.bm25_weight)
+        _ingest(vector_docs, self.vector_weight)
+
+        ordered = sorted(merged.values(), key=lambda x: x[0], reverse=True)
+        return [doc for _, doc in ordered]
+
+
 def create_hybrid_retriever(
     vectorstore,
     *,
@@ -536,9 +573,11 @@ def create_hybrid_retriever(
     bm25_retriever = BM25Retriever.from_documents(documents)
     bm25_retriever.k = bm25_k
 
-    retriever = EnsembleRetriever(
-        retrievers=[bm25_retriever, vector_retriever],
-        weights=[bm25_weight, vector_weight],
+    retriever = WeightedHybridRetriever(
+        bm25_retriever,
+        vector_retriever,
+        bm25_weight=bm25_weight,
+        vector_weight=vector_weight,
     )
     return RetrieverBundle(primary=retriever, fallback=bm25_retriever, all_documents=tuple(documents))
 
