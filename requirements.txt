@@ -1,0 +1,15 @@
+streamlit>=1.45,<2.0
+requests>=2.32,<3.0
+langchain>=0.3,<0.4
+langchain-community>=0.3,<0.4
+langchain-core>=0.3,<0.4
+langchain-text-splitters>=0.3,<0.4
+faiss-cpu>=1.8,<2.0
+PyMuPDF>=1.24,<2.0
+pypdf>=5.0,<6.0
+dashscope>=1.20,<2.0
+tavily-python>=0.5,<1.0
+python-dotenv>=1.0,<2.0
+numpy>=2.0,<3.0
+rank-bm25>=0.2,<1.0
+fastembed>=0.3,<1.0

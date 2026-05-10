@@ -1,0 +1,188 @@
+[
+  {
+    "question": "999感冒灵的作用？",
+    "expected_keywords": ["解热镇痛", "感冒", "就医指征"],
+    "category": "drug_insert",
+    "note": "说明书·药理作用与适应症表述"
+  },
+  {
+    "question": "999感冒灵的用法用量是什么？",
+    "expected_keywords": ["用法用量", "一次", "一日"],
+    "category": "drug_insert",
+    "note": "说明书·用法用量"
+  },
+  {
+    "question": "999感冒灵有哪些禁忌？",
+    "expected_keywords": ["禁忌", "慎用", "孕妇"],
+    "category": "drug_insert",
+    "note": "说明书·禁忌"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些不良反应？",
+    "expected_keywords": ["不良反应", "过敏", "胃肠道"],
+    "category": "drug_insert",
+    "note": "说明书·不良反应"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些禁忌或注意事项？",
+    "expected_keywords": ["过敏", "禁用", "慎用"],
+    "category": "drug_insert",
+    "note": "说明书·禁忌与注意"
+  },
+  {
+    "question": "头孢氨苄胶囊适用于什么情况？",
+    "expected_keywords": ["适应症", "敏感菌", "感染"],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "蒙脱石散怎么吃？",
+    "expected_keywords": ["用法用量", "口服", "温开水"],
+    "category": "drug_insert",
+    "note": "说明书·用法用量（与原文措辞对齐）"
+  },
+  {
+    "question": "盐酸二甲双胍片适用于什么情况？",
+    "expected_keywords": ["适应症", "糖尿病", "治疗"],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "盐酸二甲双胍片有哪些需要注意的不良反应？",
+    "expected_keywords": ["不良反应", "胃肠道", "乳酸"],
+    "category": "drug_insert",
+    "note": "说明书·不良反应（乳酸酸中毒等若未收录可调整关键词）"
+  },
+  {
+    "question": "来那度胺胶囊孕妇能用吗？",
+    "expected_keywords": ["孕妇及哺乳期妇女用药", "禁忌", "孕妇"],
+    "category": "drug_insert",
+    "note": "说明书·妊娠哺乳"
+  },
+  {
+    "question": "来那度胺胶囊需要注意哪些事项？",
+    "expected_keywords": ["注意事项", "不良反应", "监测"],
+    "category": "drug_insert",
+    "note": "说明书·注意事项"
+  },
+  {
+    "question": "来那度胺胶囊如何贮存？",
+    "expected_keywords": ["贮藏", "密封", "遮光"],
+    "category": "drug_insert",
+    "note": "说明书·贮藏"
+  },
+  {
+    "question": "高血压患者日常饮食需要注意什么？",
+    "expected_keywords": ["减少钠盐", "增加钾盐摄入", "戒烟", "戒酒"],
+    "category": "disease_general",
+    "note": "基层高血压手册2025·生活方式（原文含合理膳食括号内容）"
+  },
+  {
+    "question": "高血压患者需要怎么调整生活方式？",
+    "expected_keywords": ["控制体重", "规律运动", "减轻精神压力", "保持健康睡眠", "戒烟"],
+    "category": "disease_general",
+    "note": "手册·生活方式干预列举"
+  },
+  {
+    "question": "高血压患者确诊后何时启动降压药物治疗？",
+    "expected_keywords": ["生活方式", "药物治疗", "立即"],
+    "category": "disease_general",
+    "note": "手册·启动药物治疗时机"
+  },
+  {
+    "question": "常用降压药物有哪几大类？",
+    "expected_keywords": ["ACEI", "ARB", "CCB", "利尿剂"],
+    "category": "disease_general",
+    "note": "手册·五大类降压药"
+  },
+  {
+    "question": "高血压患者随访频率一般是怎样的？",
+    "expected_keywords": ["随访", "3个月", "血压"],
+    "category": "disease_general",
+    "note": "手册·随访管理"
+  },
+  {
+    "question": "哪些情况建议高血压患者转诊？",
+    "expected_keywords": ["转诊", "血压", "合并症"],
+    "category": "disease_general",
+    "note": "手册·转诊建议"
+  },
+  {
+    "question": "发热症状有哪些？",
+    "expected_keywords": ["全身不适", "皮肤苍白", "恶心呕吐", "发热", "惊厥"],
+    "category": "disease_general",
+    "note": "发热相关知识点（依赖库内是否有对应片段）"
+  },
+  {
+    "question": "寻常痤疮诊疗指南里外用维A酸类药物要注意什么？",
+    "expected_keywords": ["维A酸类药物", "防晒", "皮肤刺激"],
+    "category": "disease_general",
+    "note": "痤疮基层指南2023·外用维A酸"
+  },
+  {
+    "question": "痤疮指南里过氧化苯甲酰的作用是什么？",
+    "expected_keywords": ["过氧化苯甲酰", "痤疮丙酸杆菌", "抗炎"],
+    "category": "disease_general",
+    "note": "痤疮指南·抗氧化剂小节"
+  },
+  {
+    "question": "重度痤疮系统治疗常用哪些抗菌药物？",
+    "expected_keywords": ["米诺环素", "多西环素", "四环素"],
+    "category": "disease_general",
+    "note": "痤疮指南·系统抗菌药"
+  },
+  {
+    "question": "寻常痤疮如何按皮损分级？",
+    "expected_keywords": ["Ⅰ级", "粉刺", "丘疹", "脓疱"],
+    "category": "disease_general",
+    "note": "痤疮指南·分级分度"
+  },
+  {
+    "question": "痤疮诊疗指南里提到了哪些联合治疗思路？",
+    "expected_keywords": ["联合", "分级", "维持"],
+    "category": "disease_general",
+    "note": "痤疮指南·联合与分级治疗"
+  },
+  {
+    "question": "痤疮患者日常护肤和生活应注意什么？",
+    "expected_keywords": ["防晒", "控油", "洁面"],
+    "category": "disease_general",
+    "note": "痤疮指南·健康教育"
+  },
+  {
+    "question": "寻常痤疮的病因主要涉及哪些因素？",
+    "expected_keywords": ["雄激素", "皮脂", "痤疮丙酸杆菌"],
+    "category": "disease_general",
+    "note": "痤疮指南·病因发病机制"
+  },
+  {
+    "question": "玫瑰痤疮和寻常痤疮怎么鉴别？",
+    "expected_keywords": ["玫瑰痤疮", "粉刺", "红斑"],
+    "category": "disease_general",
+    "note": "痤疮指南·鉴别诊断"
+  },
+  {
+    "question": "头孢氨苄和青霉素过敏的人能用吗？",
+    "expected_keywords": ["青霉素", "过敏", "交叉"],
+    "category": "drug_insert",
+    "note": "说明书·过敏史（若正文无交叉过敏表述请改关键词）"
+  },
+  {
+    "question": "二甲双胍肾功能不全时能用吗？",
+    "expected_keywords": ["肾功能", "禁忌", "慎用"],
+    "category": "drug_insert",
+    "note": "说明书·禁忌/肾功能（依赖原文措辞）"
+  },
+  {
+    "question": "来那度胺的主要适应症是什么？",
+    "expected_keywords": ["适应症", "多发性骨髓瘤", "骨髓"],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "蒙脱石散主要用于治疗什么？",
+    "expected_keywords": ["适应症", "腹泻", "肠道"],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "question": "999感冒灵的作用？",
+    "expected_keywords": ["解热镇痛", "感冒", "就医指征"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "999感冒灵的用法用量是什么？",
+    "expected_keywords": ["用法用量", "一次", "一日"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些不良反应？",
+    "expected_keywords": ["不良反应", "过敏", "胃肠道"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些禁忌或注意事项？",
+    "expected_keywords": ["过敏", "禁用", "慎用"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "蒙脱石散怎么吃？",
+    "expected_keywords": ["口服", "温开水", "分次服用"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "盐酸二甲双胍片适用于什么情况？",
+    "expected_keywords": ["适应症", "糖尿病", "治疗"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "来那度胺胶囊孕妇能用吗？",
+    "expected_keywords": ["孕妇及哺乳期妇女用药", "禁忌", "孕妇"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "来那度胺胶囊需要注意哪些事项？",
+    "expected_keywords": ["注意事项", "不良反应", "监测"],
+    "category": "drug_insert"
+  },
+  {
+    "question": "高血压患者日常饮食需要注意什么？",
+    "expected_keywords": ["合理膳食", "减少钠盐", "增加钾盐摄入", "戒烟", "戒酒"],
+    "category": "disease_general"
+  },
+  {
+    "question": "发热症状有哪些？",
+    "expected_keywords": ["全身不适", "皮肤苍白", "恶心呕吐", "发热", "惊厥"],
+    "category": "disease_general"
+  },
+  {
+    "question": "痤疮诊疗指南？",
+    "expected_keywords": ["维A酸类药物", "抗氧化剂", "抗菌药物", "剂量与疗程", "不良反应"],
+    "category": "disease_general"
+  },
+  {
+    "question": "高血压患者需要怎么调整生活方式？",
+    "expected_keywords": ["控制体重", "规律运动", "减轻精神压力", "保持健康睡眠", "戒烟"],
+    "category": "disease_general"
+  }
+]
