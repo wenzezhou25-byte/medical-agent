@@ -7,9 +7,10 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 try:
-    from langchain.retrievers import EnsembleRetriever
-except ImportError:
+    # Prefer classic retrievers path for better compatibility across Python versions.
     from langchain_classic.retrievers.ensemble import EnsembleRetriever
+except Exception:
+    from langchain.retrievers import EnsembleRetriever
 
 
 SECTION_TITLES = [
