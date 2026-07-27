@@ -213,7 +213,3 @@ evaluate_rag.py: 7/7，整体检索准确率 100.0%
 - 药物冲突检测是基于检索和关键词的粗筛，不是严格药学知识图谱。
 - 医院推荐依赖高德地图 API，真实效果需要结合 API key、城市和地址进行人工验证。
 - `app.py` 仍较大，后续可拆分为认证、地图、RAG、用药计划和知识库服务等模块。
-
-## 面试材料
-
-简历 bullet、面试讲稿和常见问题见 [docs/interview_guide.md](docs/interview_guide.md)。
