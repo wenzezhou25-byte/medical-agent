@@ -1,0 +1,36 @@
+flowchart LR
+  U["用户 / 浏览器"] --> S["Streamlit app.py"]
+
+  subgraph "知识库构建"
+    P["PDF 文件 data/*.pdf 或上传"] --> L["PDF Loader"]
+    L --> C["文本清洗与结构化切块"]
+    C --> E["Embedding"]
+    E --> V["FAISS vector_store"]
+    C --> M["文档 metadata"]
+  end
+
+  subgraph "RAG 问答链路"
+    Q["用户问题"] --> R["Hybrid Retriever"]
+    V --> R
+    R --> B["BM25 + 向量召回"]
+    B --> RR["轻量 rerank"]
+    RR --> F["format_docs_for_prompt"]
+    F --> PT["PromptTemplate 四分类结论"]
+    PT --> LLM["ChatTongyi"]
+    LLM --> A["带证据回答"]
+  end
+
+  subgraph "家庭健康功能"
+    S --> UP["用户档案 JSON"]
+    S --> MP["用药计划 / 打卡 JSON"]
+    S --> DI["药物冲突粗筛"]
+  end
+
+  subgraph "附近医院"
+    S --> AM["高德地图 API"]
+    AM --> POI["多关键词 POI 召回"]
+    POI --> SORT["类型评分 + 路线距离排序"]
+  end
+
+  S --> Q
+  A --> S

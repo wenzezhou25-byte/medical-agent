@@ -18,11 +18,13 @@ knowledge_base_stats.json
 *.pkl
 
 data/*.json
+data/*.pdf
 user_profile.json
 medication_log.json
 retrieval_accuracy_report*.json
 eval_sets/*.json
 replay_eval_report.json
+tmp_*.txt
 *.log
 
 .streamlit/secrets.toml

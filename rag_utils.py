@@ -627,8 +627,14 @@ def format_docs_for_prompt(docs: Sequence[Document]) -> str:
         source_name = metadata.get("source_name") or normalize_source_name(metadata.get("source", ""))
         page = metadata.get("page") or "?"
         section_title = metadata.get("section_title") or "未分类"
+        document_type = metadata.get("document_type") or "未标注"
         rerank_score = metadata.get("rerank_score")
         score_text = f" | 相关度={rerank_score}" if rerank_score is not None else ""
-        header = f"[证据 {idx}] 文件={source_name} | 页码={page} | 章节={section_title}{score_text}"
+        # header 中显式列出 document_type，便于模型在四分类判定时区分
+        # 药品说明书(drug_insert)与泛医学指南(disease_general)
+        header = (
+            f"[证据 {idx}] 文件={source_name} | 页码={page} | "
+            f"章节={section_title} | 文档类型={document_type}{score_text}"
+        )
         blocks.append(f"{header}\n{doc.page_content}")
     return "\n\n--- [文档片段] ---\n\n".join(blocks)
