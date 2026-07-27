@@ -86,7 +86,7 @@ flowchart LR
 ├── data/                     # PDF、用户档案、用药记录
 ├── vector_store/             # FAISS 索引
 ├── eval_sets/                # 评测集和评测报告
-└── docs/                     # 架构图和面试材料
+└── docs/                     # 架构图等项目文档
 ```
 
 ## 环境配置
