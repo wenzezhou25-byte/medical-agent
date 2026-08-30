@@ -1,0 +1,368 @@
+{
+  "input_file": "test_questions.json",
+  "top_k": 7,
+  "query_count": 31,
+  "global_coverage": "100.0%",
+  "category_stats": {
+    "drug_insert": {
+      "count": 13,
+      "avg_unique_sources": 1.0,
+      "coverage": "100.0%"
+    },
+    "disease_general": {
+      "count": 14,
+      "avg_unique_sources": 1.5,
+      "coverage": "100.0%"
+    },
+    "general": {
+      "count": 4,
+      "avg_unique_sources": 1.0,
+      "coverage": "100.0%"
+    }
+  },
+  "samples": [
+    {
+      "index": 1,
+      "question": "999感冒灵的作用？",
+      "category": "drug_insert",
+      "retrieved_count": 5,
+      "top_sources": [
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf"
+      ]
+    },
+    {
+      "index": 2,
+      "question": "999感冒灵的用法用量是什么？",
+      "category": "drug_insert",
+      "retrieved_count": 5,
+      "top_sources": [
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf"
+      ]
+    },
+    {
+      "index": 3,
+      "question": "999感冒灵有哪些禁忌？",
+      "category": "drug_insert",
+      "retrieved_count": 5,
+      "top_sources": [
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf",
+        "999感冒灵用药指南.pdf"
+      ]
+    },
+    {
+      "index": 4,
+      "question": "头孢氨苄胶囊有哪些不良反应？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf"
+      ]
+    },
+    {
+      "index": 5,
+      "question": "头孢氨苄胶囊有哪些禁忌或注意事项？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf"
+      ]
+    },
+    {
+      "index": 6,
+      "question": "头孢氨苄胶囊适用于什么情况？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf"
+      ]
+    },
+    {
+      "index": 7,
+      "question": "蒙脱石散怎么吃？",
+      "category": "drug_insert",
+      "retrieved_count": 2,
+      "top_sources": [
+        "国药准字H20093622_蒙脱石散.pdf",
+        "国药准字H20093622_蒙脱石散.pdf"
+      ]
+    },
+    {
+      "index": 8,
+      "question": "盐酸二甲双胍片适用于什么情况？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf"
+      ]
+    },
+    {
+      "index": 9,
+      "question": "盐酸二甲双胍片有哪些需要注意的不良反应？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf"
+      ]
+    },
+    {
+      "index": 10,
+      "question": "来那度胺胶囊孕妇能用吗？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf"
+      ]
+    },
+    {
+      "index": 11,
+      "question": "来那度胺胶囊需要注意哪些事项？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf"
+      ]
+    },
+    {
+      "index": 12,
+      "question": "来那度胺胶囊如何贮存？",
+      "category": "drug_insert",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf"
+      ]
+    },
+    {
+      "index": 13,
+      "question": "高血压患者日常饮食需要注意什么？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 14,
+      "question": "高血压患者需要怎么调整生活方式？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 15,
+      "question": "高血压患者确诊后何时启动降压药物治疗？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 16,
+      "question": "常用降压药物有哪几大类？",
+      "category": "general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 17,
+      "question": "高血压患者随访频率一般是怎样的？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 18,
+      "question": "哪些情况建议高血压患者转诊？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf",
+        "国家基层高血压防治管理手册2025版.pdf"
+      ]
+    },
+    {
+      "index": 19,
+      "question": "发热症状有哪些？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "1.pdf",
+        "2.pdf",
+        "2.pdf"
+      ]
+    },
+    {
+      "index": 20,
+      "question": "寻常痤疮诊疗指南里外用维A酸类药物要注意什么？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 21,
+      "question": "痤疮指南里过氧化苯甲酰的作用是什么？",
+      "category": "disease_general",
+      "retrieved_count": 6,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 22,
+      "question": "重度痤疮系统治疗常用哪些抗菌药物？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 23,
+      "question": "寻常痤疮如何按皮损分级？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 24,
+      "question": "痤疮诊疗指南里提到了哪些联合治疗思路？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 25,
+      "question": "痤疮患者日常护肤和生活应注意什么？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 26,
+      "question": "寻常痤疮的病因主要涉及哪些因素？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 27,
+      "question": "玫瑰痤疮和寻常痤疮怎么鉴别？",
+      "category": "disease_general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "0.pdf",
+        "0.pdf",
+        "0.pdf"
+      ]
+    },
+    {
+      "index": 28,
+      "question": "头孢氨苄和青霉素过敏的人能用吗？",
+      "category": "general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf",
+        "国药准字H13020791_头孢氨苄胶囊.pdf"
+      ]
+    },
+    {
+      "index": 29,
+      "question": "二甲双胍肾功能不全时能用吗？",
+      "category": "general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf",
+        "国药准字H20184130_盐酸二甲双胍片.pdf"
+      ]
+    },
+    {
+      "index": 30,
+      "question": "来那度胺的主要适应症是什么？",
+      "category": "general",
+      "retrieved_count": 7,
+      "top_sources": [
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf",
+        "国药准字H20193006_来那度胺胶囊.pdf"
+      ]
+    },
+    {
+      "index": 31,
+      "question": "蒙脱石散主要用于治疗什么？",
+      "category": "drug_insert",
+      "retrieved_count": 2,
+      "top_sources": [
+        "国药准字H20093622_蒙脱石散.pdf",
+        "国药准字H20093622_蒙脱石散.pdf"
+      ]
+    }
+  ],
+  "notes": [
+    "回放评测用于观察线上问题是否可被检索到，不替代标注评测。",
+    "建议配合 blind 集合与文档级 Recall@k 一起看。"
+  ]
+}

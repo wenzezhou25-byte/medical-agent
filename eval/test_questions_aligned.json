@@ -1,0 +1,112 @@
+[
+  {
+    "question": "999感冒灵的作用？",
+    "expected_keywords": [
+      "解热镇痛",
+      "感冒",
+      "就医指征"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·药理作用与适应症表述"
+  },
+  {
+    "question": "999感冒灵有哪些禁忌？",
+    "expected_keywords": [
+      "禁忌",
+      "慎用",
+      "孕妇"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·禁忌"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些不良反应？",
+    "expected_keywords": [
+      "不良反应",
+      "过敏",
+      "胃肠道"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·不良反应"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些禁忌或注意事项？",
+    "expected_keywords": [
+      "过敏",
+      "禁用",
+      "慎用"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·禁忌与注意"
+  },
+  {
+    "question": "头孢氨苄胶囊适用于什么情况？",
+    "expected_keywords": [
+      "适应症",
+      "敏感菌",
+      "感染"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "蒙脱石散怎么吃？",
+    "expected_keywords": [
+      "用法用量",
+      "口服",
+      "温开水"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·用法用量（与原文措辞对齐）"
+  },
+  {
+    "question": "盐酸二甲双胍片适用于什么情况？",
+    "expected_keywords": [
+      "适应症",
+      "糖尿病",
+      "治疗"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "盐酸二甲双胍片有哪些需要注意的不良反应？",
+    "expected_keywords": [
+      "不良反应",
+      "胃肠道",
+      "乳酸"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·不良反应（乳酸酸中毒等若未收录可调整关键词）"
+  },
+  {
+    "question": "头孢氨苄和青霉素过敏的人能用吗？",
+    "expected_keywords": [
+      "青霉素",
+      "过敏",
+      "交叉"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·过敏史（若正文无交叉过敏表述请改关键词）"
+  },
+  {
+    "question": "二甲双胍肾功能不全时能用吗？",
+    "expected_keywords": [
+      "肾功能",
+      "禁忌",
+      "慎用"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·禁忌/肾功能（依赖原文措辞）"
+  },
+  {
+    "question": "蒙脱石散主要用于治疗什么？",
+    "expected_keywords": [
+      "适应症",
+      "腹泻",
+      "肠道"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  }
+]

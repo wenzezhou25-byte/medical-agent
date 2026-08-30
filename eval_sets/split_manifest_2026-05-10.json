@@ -1,0 +1,23 @@
+{
+  "source_file": "test_questions.json",
+  "seed": 20260510,
+  "ratios": {
+    "tune": 0.6,
+    "dev": 0.2,
+    "blind": 0.2
+  },
+  "counts": {
+    "total": 31,
+    "tune": 18,
+    "dev": 6,
+    "blind": 7
+  },
+  "notes": [
+    "采用按 category 分层抽样，保证各类题都进入 tune/dev/blind。",
+    "blind_questions.json 建议冻结，不参与提示词或同义词调参。"
+  ],
+  "frozen_files": {
+    "blind_questions": "eval_sets\\blind_questions_2026-05-10.json",
+    "split_manifest": "eval_sets\\split_manifest_2026-05-10.json"
+  }
+}

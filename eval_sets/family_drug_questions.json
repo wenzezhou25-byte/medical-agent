@@ -1,0 +1,660 @@
+[
+  {
+    "question": "B型流感嗜血杆菌疫苗的用法用量是什么？",
+    "expected_keywords": [
+      "肌肉注射",
+      "一次",
+      "臀部"
+    ],
+    "gold_sources": [
+      "B型流感嗜血杆菌疫苗"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·B型流感嗜血杆菌疫苗/用法用量"
+  },
+  {
+    "question": "B型流感嗜血杆菌疫苗的不良反应是什么？",
+    "expected_keywords": [
+      "每日",
+      "临床",
+      "对照"
+    ],
+    "gold_sources": [
+      "B型流感嗜血杆菌疫苗"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·B型流感嗜血杆菌疫苗/不良反应"
+  },
+  {
+    "question": "B族维生素含片的适应症是什么？",
+    "expected_keywords": [
+      "清除",
+      "疲劳",
+      "提高"
+    ],
+    "gold_sources": [
+      "B族维生素含片"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·B族维生素含片/适应症"
+  },
+  {
+    "question": "B族维生素含片的成分是什么？",
+    "expected_keywords": [
+      "维生素",
+      "B1",
+      "维生素"
+    ],
+    "gold_sources": [
+      "B族维生素含片"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·B族维生素含片/成分"
+  },
+  {
+    "question": "B族维生素片的适应症是什么？",
+    "expected_keywords": [
+      "参与",
+      "多种",
+      "生理"
+    ],
+    "gold_sources": [
+      "B族维生素片"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·B族维生素片/适应症"
+  },
+  {
+    "question": "DHA-EPA的适应症是什么？",
+    "expected_keywords": [
+      "强健",
+      "脑力",
+      "增强"
+    ],
+    "gold_sources": [
+      "DHA-EPA"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·DHA-EPA/适应症"
+  },
+  {
+    "question": "L-赖氨酸盐酸盐颗粒的注意事项需要注意什么？",
+    "expected_keywords": [
+      "抗生素",
+      "必须",
+      "青霉素"
+    ],
+    "gold_sources": [
+      "L-赖氨酸盐酸盐颗粒"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·L-赖氨酸盐酸盐颗粒/注意事项"
+  },
+  {
+    "question": "L-赖氨酸盐酸盐颗粒的成分是什么？",
+    "expected_keywords": [
+      "氨基酸",
+      "类药",
+      "氨基"
+    ],
+    "gold_sources": [
+      "L-赖氨酸盐酸盐颗粒"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·L-赖氨酸盐酸盐颗粒/成分"
+  },
+  {
+    "question": "L-门冬氨酸氨氯地平的用法用量是什么？",
+    "expected_keywords": [
+      "一日",
+      "肝功能",
+      "通常"
+    ],
+    "gold_sources": [
+      "L-门冬氨酸氨氯地平"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·L-门冬氨酸氨氯地平/用法用量"
+  },
+  {
+    "question": "L-门冬氨酸氨氯地平的不良反应是什么？",
+    "expected_keywords": [
+      "不良反应",
+      "常见",
+      "头痛"
+    ],
+    "gold_sources": [
+      "L-门冬氨酸氨氯地平"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·L-门冬氨酸氨氯地平/不良反应"
+  },
+  {
+    "question": "L-门冬氨酸氨氯地平片的用法用量是什么？",
+    "expected_keywords": [
+      "一日",
+      "肝功能",
+      "通常"
+    ],
+    "gold_sources": [
+      "L-门冬氨酸氨氯地平片"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·L-门冬氨酸氨氯地平片/用法用量"
+  },
+  {
+    "question": "L-门冬氨酸氨氯地平片的不良反应是什么？",
+    "expected_keywords": [
+      "不良反应",
+      "常见",
+      "头痛"
+    ],
+    "gold_sources": [
+      "L-门冬氨酸氨氯地平片"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·L-门冬氨酸氨氯地平片/不良反应"
+  },
+  {
+    "question": "OB纤体素软胶囊的适应症是什么？",
+    "expected_keywords": [
+      "保护",
+      "眼睛",
+      "有助于"
+    ],
+    "gold_sources": [
+      "OB纤体素软胶囊"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·OB纤体素软胶囊/适应症"
+  },
+  {
+    "question": "b型流感嗜血杆菌偶联疫苗的用法用量是什么？",
+    "expected_keywords": [
+      "肌注",
+      "10",
+      "月者"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌偶联疫苗"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌偶联疫苗/用法用量"
+  },
+  {
+    "question": "b型流感嗜血杆菌偶联疫苗的不良反应是什么？",
+    "expected_keywords": [
+      "免疫",
+      "接种",
+      "3d"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌偶联疫苗"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌偶联疫苗/不良反应"
+  },
+  {
+    "question": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗的用法用量是什么？",
+    "expected_keywords": [
+      "肌注",
+      "10",
+      "月者"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗/用法用量"
+  },
+  {
+    "question": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗的注意事项需要注意什么？",
+    "expected_keywords": [
+      "不足",
+      "周龄",
+      "婴儿"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗/注意事项"
+  },
+  {
+    "question": "b型流感嗜血杆菌结合疫苗的适应症是什么？",
+    "expected_keywords": [
+      "疫苗",
+      "适用",
+      "以上"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌结合疫苗"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌结合疫苗/适应症"
+  },
+  {
+    "question": "b型流感嗜血杆菌结合疫苗的用法用量是什么？",
+    "expected_keywords": [
+      "肌肉注射",
+      "口服",
+      "静脉注射"
+    ],
+    "gold_sources": [
+      "b型流感嗜血杆菌结合疫苗"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·b型流感嗜血杆菌结合疫苗/用法用量"
+  },
+  {
+    "question": "β-环糊精吡罗昔康片的注意事项需要注意什么？",
+    "expected_keywords": [
+      "忌食",
+      "生冷",
+      "辛辣"
+    ],
+    "gold_sources": [
+      "β-环糊精吡罗昔康片"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·β-环糊精吡罗昔康片/注意事项"
+  },
+  {
+    "question": "β-环糊精吡罗昔康片的成分是什么？",
+    "expected_keywords": [
+      "鱼腥草",
+      "麻黄",
+      "石膏"
+    ],
+    "gold_sources": [
+      "β-环糊精吡罗昔康片"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·β-环糊精吡罗昔康片/成分"
+  },
+  {
+    "question": "β-胡萝卜素软胶嚢的适应症是什么？",
+    "expected_keywords": [
+      "保护",
+      "眼睛",
+      "有助于"
+    ],
+    "gold_sources": [
+      "β-胡萝卜素软胶嚢"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·β-胡萝卜素软胶嚢/适应症"
+  },
+  {
+    "question": "β-胡萝卜素软胶囊的适应症是什么？",
+    "expected_keywords": [
+      "每日",
+      "无论",
+      "素食主义者"
+    ],
+    "gold_sources": [
+      "β-胡萝卜素软胶囊"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·β-胡萝卜素软胶囊/适应症"
+  },
+  {
+    "question": "β-胡萝卜素软胶囊的注意事项需要注意什么？",
+    "expected_keywords": [
+      "首次",
+      "发现",
+      "包装"
+    ],
+    "gold_sources": [
+      "β-胡萝卜素软胶囊"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·β-胡萝卜素软胶囊/注意事项"
+  },
+  {
+    "question": "β胡萝卜素胶囊的不良反应是什么？",
+    "expected_keywords": [
+      "不良反应",
+      "每日",
+      "复方"
+    ],
+    "gold_sources": [
+      "β胡萝卜素胶囊"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·β胡萝卜素胶囊/不良反应"
+  },
+  {
+    "question": "β胡萝卜素胶囊的注意事项需要注意什么？",
+    "expected_keywords": [
+      "肾功能",
+      "严重",
+      "损害"
+    ],
+    "gold_sources": [
+      "β胡萝卜素胶囊"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·β胡萝卜素胶囊/注意事项"
+  },
+  {
+    "question": "“明通”治伤风颗粒的不良反应是什么？",
+    "expected_keywords": [
+      "可见",
+      "恶心",
+      "头痛"
+    ],
+    "gold_sources": [
+      "“明通”治伤风颗粒"
+    ],
+    "section_title": "不良反应",
+    "category": "drug_insert",
+    "note": "自动生成·“明通”治伤风颗粒/不良反应"
+  },
+  {
+    "question": "“明通”治伤风颗粒的禁忌是什么？",
+    "expected_keywords": [
+      "马来酸",
+      "氯苯",
+      "那敏"
+    ],
+    "gold_sources": [
+      "“明通”治伤风颗粒"
+    ],
+    "section_title": "禁忌",
+    "category": "drug_insert",
+    "note": "自动生成·“明通”治伤风颗粒/禁忌"
+  },
+  {
+    "question": "一合丹牌绿屏胶囊的成分是什么？",
+    "expected_keywords": [
+      "100g",
+      "番茄红素",
+      "780mg"
+    ],
+    "gold_sources": [
+      "一合丹牌绿屏胶囊"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·一合丹牌绿屏胶囊/成分"
+  },
+  {
+    "question": "一品康天然B族维生素片的成分是什么？",
+    "expected_keywords": [
+      "每片",
+      "维生素",
+      "B1"
+    ],
+    "gold_sources": [
+      "一品康天然B族维生素片"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·一品康天然B族维生素片/成分"
+  },
+  {
+    "question": "一扫光药膏的注意事项需要注意什么？",
+    "expected_keywords": [
+      "每日",
+      "一次",
+      "涂敷"
+    ],
+    "gold_sources": [
+      "一扫光药膏"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一扫光药膏/注意事项"
+  },
+  {
+    "question": "一捻金的注意事项需要注意什么？",
+    "expected_keywords": [
+      "每次",
+      "忌食",
+      "生冷"
+    ],
+    "gold_sources": [
+      "一捻金"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一捻金/注意事项"
+  },
+  {
+    "question": "一捻金胶囊的用法用量是什么？",
+    "expected_keywords": [
+      "口服",
+      "一次",
+      "一日"
+    ],
+    "gold_sources": [
+      "一捻金胶囊"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·一捻金胶囊/用法用量"
+  },
+  {
+    "question": "一枝蒿伤湿祛痛膏的注意事项需要注意什么？",
+    "expected_keywords": [
+      "哺乳期",
+      "过敏",
+      "外用药"
+    ],
+    "gold_sources": [
+      "一枝蒿伤湿祛痛膏"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一枝蒿伤湿祛痛膏/注意事项"
+  },
+  {
+    "question": "一清片的适应症是什么？",
+    "expected_keywords": [
+      "清热泻火",
+      "解毒",
+      "化瘀"
+    ],
+    "gold_sources": [
+      "一清片"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·一清片/适应症"
+  },
+  {
+    "question": "一清片的注意事项需要注意什么？",
+    "expected_keywords": [
+      "孕妇",
+      "哺乳期",
+      "过敏"
+    ],
+    "gold_sources": [
+      "一清片"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一清片/注意事项"
+  },
+  {
+    "question": "一清胶囊的适应症是什么？",
+    "expected_keywords": [
+      "清热",
+      "燥湿",
+      "泻火"
+    ],
+    "gold_sources": [
+      "一清胶囊"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·一清胶囊/适应症"
+  },
+  {
+    "question": "一清胶囊的注意事项需要注意什么？",
+    "expected_keywords": [
+      "每日",
+      "过敏",
+      "孕妇"
+    ],
+    "gold_sources": [
+      "一清胶囊"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一清胶囊/注意事项"
+  },
+  {
+    "question": "一清软胶囊的适应症是什么？",
+    "expected_keywords": [
+      "清热泻火",
+      "解毒",
+      "化瘀"
+    ],
+    "gold_sources": [
+      "一清软胶囊"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·一清软胶囊/适应症"
+  },
+  {
+    "question": "一清颗粒的适应症是什么？",
+    "expected_keywords": [
+      "清热泻火",
+      "解毒",
+      "火毒"
+    ],
+    "gold_sources": [
+      "一清颗粒"
+    ],
+    "section_title": "适应症",
+    "category": "drug_insert",
+    "note": "自动生成·一清颗粒/适应症"
+  },
+  {
+    "question": "一清颗粒的注意事项需要注意什么？",
+    "expected_keywords": [
+      "每日",
+      "孕妇",
+      "哺乳期"
+    ],
+    "gold_sources": [
+      "一清颗粒"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·一清颗粒/注意事项"
+  },
+  {
+    "question": "丁公藤风湿药酒的成分是什么？",
+    "expected_keywords": [
+      "丁公藤",
+      "桂枝",
+      "麻黄"
+    ],
+    "gold_sources": [
+      "丁公藤风湿药酒"
+    ],
+    "section_title": "成分",
+    "category": "drug_insert",
+    "note": "自动生成·丁公藤风湿药酒/成分"
+  },
+  {
+    "question": "丁桂儿脐贴的注意事项需要注意什么？",
+    "expected_keywords": [
+      "过敏",
+      "外用药",
+      "内服"
+    ],
+    "gold_sources": [
+      "丁桂儿脐贴"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·丁桂儿脐贴/注意事项"
+  },
+  {
+    "question": "丁桂温胃散的注意事项需要注意什么？",
+    "expected_keywords": [
+      "过敏",
+      "忌食",
+      "生冷"
+    ],
+    "gold_sources": [
+      "丁桂温胃散"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·丁桂温胃散/注意事项"
+  },
+  {
+    "question": "丁桂温胃胶囊的注意事项需要注意什么？",
+    "expected_keywords": [
+      "过敏",
+      "忌食",
+      "生冷"
+    ],
+    "gold_sources": [
+      "丁桂温胃胶囊"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·丁桂温胃胶囊/注意事项"
+  },
+  {
+    "question": "丁硼乳膏的用法用量是什么？",
+    "expected_keywords": [
+      "一次",
+      "一日",
+      "乳膏"
+    ],
+    "gold_sources": [
+      "丁硼乳膏"
+    ],
+    "section_title": "用法用量",
+    "category": "drug_insert",
+    "note": "自动生成·丁硼乳膏/用法用量"
+  },
+  {
+    "question": "丁硼乳膏的注意事项需要注意什么？",
+    "expected_keywords": [
+      "过敏",
+      "坏死性",
+      "牙龈炎"
+    ],
+    "gold_sources": [
+      "丁硼乳膏"
+    ],
+    "section_title": "注意事项",
+    "category": "drug_insert",
+    "note": "自动生成·丁硼乳膏/注意事项"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {"question": "我发烧了，该吃什么退烧药？", "expected_tokens": ["布洛芬", "对乙酰氨基酚"], "note": "发热·解热镇痛药"},
+  {"question": "嗓子疼，轻微感冒，吃点什么好？", "expected_tokens": ["板蓝根颗粒", "连花清瘟"], "note": "咽痛·清热利咽"},
+  {"question": "一直干咳没有痰，用什么药？", "expected_tokens": ["右美沙芬"], "note": "无痰干咳·镇咳"},
+  {"question": "感冒流清鼻涕、鼻塞，吃什么药？", "expected_tokens": ["复方氨酚", "氨酚曲麻"], "note": "感冒·通窍对症"},
+  {"question": "反酸、烧心，有什么药能缓解？", "expected_tokens": ["奥美拉唑", "西咪替丁", "铝碳酸镁"], "note": "胃食管反流·抑酸或中和"},
+  {"question": "拉肚子，吃什么止泻？", "expected_tokens": ["蒙脱石"], "note": "腹泻·黏膜保护"},
+  {"question": "便秘好几天了，吃什么药通便？", "expected_tokens": ["开塞露", "乳果糖"], "note": "便秘·润滑或渗透性泻药"},
+  {"question": "身上过敏起疹子、很痒，吃什么药？", "expected_tokens": ["氯雷他定"], "note": "过敏瘙痒·抗组胺"},
+  {"question": "哮喘发作喘不过气，用什么药缓解？", "expected_tokens": ["沙丁胺醇"], "note": "哮喘·短效支气管扩张"},
+  {"question": "过敏性鼻炎老打喷嚏，用什么药？", "expected_tokens": ["布地奈德", "氯雷他定"], "note": "过敏性鼻炎·鼻喷或抗组胺"},
+  {"question": "吃完饭胃胀不消化，吃什么药？", "expected_tokens": ["多潘立酮"], "note": "消化不良·促胃动力"},
+  {"question": "查出高血压，平时吃哪种降压药？", "expected_tokens": ["硝苯地平"], "note": "高血压·钙拮抗剂"},
+  {"question": "2型糖尿病，需要吃什么降糖药？", "expected_tokens": ["二甲双胍"], "note": "2型糖尿病·双胍类"},
+  {"question": "咳嗽痰多，吃什么化痰止咳的药好？", "expected_tokens": ["急支糖浆", "川贝"], "note": "痰湿咳嗽·化痰"},
+  {"question": "流感发烧浑身酸痛，吃什么药？", "expected_tokens": ["连花清瘟", "复方氨酚", "对乙酰氨基酚"], "note": "流感·清热解毒或对症"},
+  {"question": "踢球扭伤了脚踝，用什么药缓解肿痛？", "expected_tokens": ["云南白药"], "note": "跌打损伤·活血止痛"},
+  {"question": "天热中暑恶心，吃什么药舒服些？", "expected_tokens": ["藿香正气"], "note": "中暑·解表化湿"},
+  {"question": "头痛得厉害，吃什么止痛药管用？", "expected_tokens": ["布洛芬", "对乙酰氨基酚"], "note": "头痛·解热镇痛"}
+]

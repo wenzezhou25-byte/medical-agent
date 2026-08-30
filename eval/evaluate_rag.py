@@ -1,17 +1,23 @@
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-from langchain_community.vectorstores import FAISS
+# 脚本移入 eval/ 子目录后，需手动把项目根加入 sys.path 以便导入顶层模块
+if str(Path(__file__).resolve().parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from vector_store import VectorStore
 
 from config import VECTOR_STORE_PATH
 from embedding_provider import get_embeddings
 from rag_utils import classify_query_type, create_hybrid_retriever, retrieve_evidence_docs
 
 
-TEST_QUESTIONS_PATH = Path("test_questions.json")
-REPORT_PATH = Path("retrieval_accuracy_report_rerank.json")
+_EVAL_DIR = Path(__file__).resolve().parent
+TEST_QUESTIONS_PATH = _EVAL_DIR / "test_questions.json"
+REPORT_PATH = _EVAL_DIR / "retrieval_accuracy_report_rerank.json"
 
 SYNONYMS = {
     "低盐": ["低钠", "少盐", "减盐", "限盐", "减少钠盐", "盐摄入<5g", "每日食盐不超过5g"],
@@ -99,7 +105,7 @@ def evaluate(
         raise FileNotFoundError(f"未找到向量库目录：{VECTOR_STORE_PATH}")
 
     embeddings = get_embeddings()
-    vectorstore = FAISS.load_local(
+    vectorstore = VectorStore.load_local(
         VECTOR_STORE_PATH,
         embeddings,
         allow_dangerous_deserialization=True,

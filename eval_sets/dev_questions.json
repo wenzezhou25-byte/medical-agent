@@ -1,0 +1,64 @@
+[
+  {
+    "question": "寻常痤疮诊疗指南里外用维A酸类药物要注意什么？",
+    "expected_keywords": [
+      "维A酸类药物",
+      "防晒",
+      "皮肤刺激"
+    ],
+    "category": "disease_general",
+    "note": "痤疮基层指南2023·外用维A酸"
+  },
+  {
+    "question": "头孢氨苄胶囊有哪些不良反应？",
+    "expected_keywords": [
+      "不良反应",
+      "过敏",
+      "胃肠道"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·不良反应"
+  },
+  {
+    "question": "头孢氨苄胶囊适用于什么情况？",
+    "expected_keywords": [
+      "适应症",
+      "敏感菌",
+      "感染"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "痤疮诊疗指南里提到了哪些联合治疗思路？",
+    "expected_keywords": [
+      "联合",
+      "分级",
+      "维持"
+    ],
+    "category": "disease_general",
+    "note": "痤疮指南·联合与分级治疗"
+  },
+  {
+    "question": "999感冒灵的作用？",
+    "expected_keywords": [
+      "解热镇痛",
+      "感冒",
+      "就医指征"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·药理作用与适应症表述"
+  },
+  {
+    "question": "高血压患者需要怎么调整生活方式？",
+    "expected_keywords": [
+      "控制体重",
+      "规律运动",
+      "减轻精神压力",
+      "保持健康睡眠",
+      "戒烟"
+    ],
+    "category": "disease_general",
+    "note": "手册·生活方式干预列举"
+  }
+]

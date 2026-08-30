@@ -1,0 +1,291 @@
+{
+  "测试总数": 7,
+  "准确数": 7,
+  "整体检索准确率": "100.0%",
+  "分类统计": {
+    "drug_insert": {
+      "测试数": 4,
+      "准确数": 4,
+      "准确率": "100.0%"
+    },
+    "disease_general": {
+      "测试数": 3,
+      "准确数": 3,
+      "准确率": "100.0%"
+    }
+  },
+  "详细结果": [
+    {
+      "问题": "来那度胺胶囊孕妇能用吗？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "孕妇及哺乳期妇女用药",
+        "禁忌",
+        "孕妇"
+      ],
+      "匹配关键词": [
+        "孕妇及哺乳期妇女用药",
+        "禁忌",
+        "孕妇"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "33",
+          "section_title": "治疗",
+          "document_type": "drug_insert",
+          "rerank_score": 21.6
+        },
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "0",
+          "section_title": "警告",
+          "document_type": "drug_insert",
+          "rerank_score": 21.6
+        },
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "23",
+          "section_title": "禁忌",
+          "document_type": "drug_insert",
+          "rerank_score": 21.6
+        }
+      ]
+    },
+    {
+      "问题": "盐酸二甲双胍片有哪些需要注意的不良反应？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "不良反应",
+        "胃肠道",
+        "乳酸"
+      ],
+      "匹配关键词": [
+        "不良反应",
+        "胃肠道",
+        "乳酸"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "国药准字H20184130_盐酸二甲双胍片.pdf",
+          "page": "2",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 40.5
+        },
+        {
+          "source_name": "国药准字H20184130_盐酸二甲双胍片.pdf",
+          "page": "2",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 39.3
+        },
+        {
+          "source_name": "国药准字H20184130_盐酸二甲双胍片.pdf",
+          "page": "6",
+          "section_title": "药物相互作用",
+          "document_type": "drug_insert",
+          "rerank_score": 25.2
+        }
+      ]
+    },
+    {
+      "问题": "蒙脱石散怎么吃？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "用法用量",
+        "口服",
+        "温开水"
+      ],
+      "匹配关键词": [
+        "用法用量",
+        "口服",
+        "温开水"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "国药准字H20093622_蒙脱石散.pdf",
+          "page": "0",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 13.2
+        },
+        {
+          "source_name": "国药准字H20093622_蒙脱石散.pdf",
+          "page": "1",
+          "section_title": "药理作用",
+          "document_type": "drug_insert",
+          "rerank_score": 11.4
+        }
+      ]
+    },
+    {
+      "问题": "玫瑰痤疮和寻常痤疮怎么鉴别？",
+      "分类": "disease_general",
+      "预期关键词": [
+        "玫瑰痤疮",
+        "粉刺",
+        "红斑"
+      ],
+      "匹配关键词": [
+        "玫瑰痤疮",
+        "粉刺",
+        "红斑"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "0.pdf",
+          "page": "1",
+          "section_title": "未分类",
+          "document_type": "disease_general",
+          "rerank_score": 15.8
+        },
+        {
+          "source_name": "0.pdf",
+          "page": "4",
+          "section_title": "注意事项",
+          "document_type": "disease_general",
+          "rerank_score": 11.6
+        },
+        {
+          "source_name": "0.pdf",
+          "page": "1",
+          "section_title": "未分类",
+          "document_type": "disease_general",
+          "rerank_score": 9.8
+        }
+      ]
+    },
+    {
+      "问题": "高血压患者随访频率一般是怎样的？",
+      "分类": "disease_general",
+      "预期关键词": [
+        "随访",
+        "3个月",
+        "血压"
+      ],
+      "匹配关键词": [
+        "随访",
+        "血压"
+      ],
+      "匹配率": "66.7%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "国家基层高血压防治管理手册2025版.pdf",
+          "page": "12",
+          "section_title": "治疗",
+          "document_type": "disease_general",
+          "rerank_score": 18.8
+        },
+        {
+          "source_name": "国家基层高血压防治管理手册2025版.pdf",
+          "page": "12",
+          "section_title": "治疗",
+          "document_type": "disease_general",
+          "rerank_score": 12.8
+        },
+        {
+          "source_name": "国家基层高血压防治管理手册2025版.pdf",
+          "page": "12",
+          "section_title": "治疗",
+          "document_type": "disease_general",
+          "rerank_score": 5.6
+        }
+      ]
+    },
+    {
+      "问题": "来那度胺的主要适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "适应症",
+        "多发性骨髓瘤",
+        "骨髓"
+      ],
+      "匹配关键词": [
+        "适应症",
+        "多发性骨髓瘤",
+        "骨髓"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "39",
+          "section_title": "未分类",
+          "document_type": "drug_insert",
+          "rerank_score": 16.6
+        },
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "36",
+          "section_title": "药理作用",
+          "document_type": "drug_insert",
+          "rerank_score": 16.1
+        },
+        {
+          "source_name": "国药准字H20193006_来那度胺胶囊.pdf",
+          "page": "5",
+          "section_title": "治疗",
+          "document_type": "drug_insert",
+          "rerank_score": 16.0
+        }
+      ]
+    },
+    {
+      "问题": "寻常痤疮如何按皮损分级？",
+      "分类": "disease_general",
+      "预期关键词": [
+        "Ⅰ级",
+        "粉刺",
+        "丘疹",
+        "脓疱"
+      ],
+      "匹配关键词": [
+        "粉刺",
+        "丘疹",
+        "脓疱"
+      ],
+      "匹配率": "75.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "0.pdf",
+          "page": "1",
+          "section_title": "未分类",
+          "document_type": "disease_general",
+          "rerank_score": 11.0
+        },
+        {
+          "source_name": "0.pdf",
+          "page": "1",
+          "section_title": "未分类",
+          "document_type": "disease_general",
+          "rerank_score": 11.0
+        },
+        {
+          "source_name": "0.pdf",
+          "page": "5",
+          "section_title": "饮食",
+          "document_type": "disease_general",
+          "rerank_score": 10.4
+        }
+      ]
+    }
+  ],
+  "评测说明": [
+    "采用混合检索(BM25 + 向量)后再进行轻量重排。",
+    "按 blind_questions_2026-05-10.json 中的 expected_keywords 与同义词表进行命中评估。",
+    "优先区分药品说明书题(drug_insert)与泛医学题(disease_general)进行分类统计。",
+    "匹配率达到 60% 及以上视为本题检索准确。"
+  ]
+}

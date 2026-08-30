@@ -1,0 +1,73 @@
+[
+  {
+    "question": "来那度胺胶囊孕妇能用吗？",
+    "expected_keywords": [
+      "孕妇及哺乳期妇女用药",
+      "禁忌",
+      "孕妇"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·妊娠哺乳"
+  },
+  {
+    "question": "盐酸二甲双胍片有哪些需要注意的不良反应？",
+    "expected_keywords": [
+      "不良反应",
+      "胃肠道",
+      "乳酸"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·不良反应（乳酸酸中毒等若未收录可调整关键词）"
+  },
+  {
+    "question": "蒙脱石散怎么吃？",
+    "expected_keywords": [
+      "用法用量",
+      "口服",
+      "温开水"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·用法用量（与原文措辞对齐）"
+  },
+  {
+    "question": "玫瑰痤疮和寻常痤疮怎么鉴别？",
+    "expected_keywords": [
+      "玫瑰痤疮",
+      "粉刺",
+      "红斑"
+    ],
+    "category": "disease_general",
+    "note": "痤疮指南·鉴别诊断"
+  },
+  {
+    "question": "高血压患者随访频率一般是怎样的？",
+    "expected_keywords": [
+      "随访",
+      "3个月",
+      "血压"
+    ],
+    "category": "disease_general",
+    "note": "手册·随访管理"
+  },
+  {
+    "question": "来那度胺的主要适应症是什么？",
+    "expected_keywords": [
+      "适应症",
+      "多发性骨髓瘤",
+      "骨髓"
+    ],
+    "category": "drug_insert",
+    "note": "说明书·适应症"
+  },
+  {
+    "question": "寻常痤疮如何按皮损分级？",
+    "expected_keywords": [
+      "Ⅰ级",
+      "粉刺",
+      "丘疹",
+      "脓疱"
+    ],
+    "category": "disease_general",
+    "note": "痤疮指南·分级分度"
+  }
+]

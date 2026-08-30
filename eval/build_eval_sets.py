@@ -6,8 +6,9 @@ from pathlib import Path
 from typing import Any
 
 
-SOURCE_PATH = Path("test_questions.json")
-OUTPUT_DIR = Path("eval_sets")
+_EVAL_DIR = Path(__file__).resolve().parent
+SOURCE_PATH = _EVAL_DIR / "test_questions.json"
+OUTPUT_DIR = _EVAL_DIR / "eval_sets"
 SEED = 20260510
 TUNE_RATIO = 0.6
 DEV_RATIO = 0.2

@@ -1,36 +1,68 @@
 flowchart LR
-  U["用户 / 浏览器"] --> S["Streamlit app.py"]
-
-  subgraph "知识库构建"
-    P["PDF 文件 data/*.pdf 或上传"] --> L["PDF Loader"]
-    L --> C["文本清洗与结构化切块"]
-    C --> E["Embedding"]
-    E --> V["FAISS vector_store"]
-    C --> M["文档 metadata"]
+  subgraph UI["Streamlit 应用层 app.py"]
+    direction TB
+    LOGIN["登录认证 UI<br/>auth.authenticate/register"]
+    TABS["三个功能页签"]
   end
 
-  subgraph "RAG 问答链路"
-    Q["用户问题"] --> R["Hybrid Retriever"]
-    V --> R
-    R --> B["BM25 + 向量召回"]
-    B --> RR["轻量 rerank"]
-    RR --> F["format_docs_for_prompt"]
-    F --> PT["PromptTemplate 四分类结论"]
-    PT --> LLM["ChatTongyi"]
-    LLM --> A["带证据回答"]
+  subgraph SERVICES["可复用业务模块（由 app.py 导入）"]
+    direction TB
+    AUTH["auth.py<br/>PBKDF2/sha256 哈希·注册·登录"]
+    UD["user_data.py<br/>家庭档案·用药计划 ·多用户"]
+    GEO["geo_hospital.py<br/>高德 geocode·POI·路线·附近医院"]
+    WS["web_search.py<br/>Tavily 联网搜索"]
+    DINT["drug_interaction.py<br/>药物冲突检测"]
   end
 
-  subgraph "家庭健康功能"
-    S --> UP["用户档案 JSON"]
-    S --> MP["用药计划 / 打卡 JSON"]
-    S --> DI["药物冲突粗筛"]
+  subgraph KB_BUILD["知识库构建（离线）"]
+    direction TB
+    PDF["PDF / 上传文档"] --> PM["PyMuPDF 原生加载 (build_drug_kb_from_dataset.py)"]
+    PM --> RK["retrieval_core.py<br/>Chunk·递归切分·JiebaBM25"]
+    RK --> DSEG["按说明书字段正则切分<br/>适应症/用法/不良反应…"]
+    DSEG --> EMB["embedding_provider.py<br/>fastembed·batch=500"]
+    EMB --> VS["vector_store.py<br/>原生 FAISS (index.faiss + chunks.json)"]
   end
 
-  subgraph "附近医院"
-    S --> AM["高德地图 API"]
-    AM --> POI["多关键词 POI 召回"]
-    POI --> SORT["类型评分 + 路线距离排序"]
+  subgraph RAG["混合检索与回答 rag_utils.py"]
+    direction TB
+    HR["Hybrid Retriever<br/>向量 + JiebaBM25 + 已知药名扩展"]
+    VS --> HR
+    RERANK["可选 bge-reranker-v2-m3 重排"]
+    HR --> RERANK
+    RERANK --> DOCS["检索证据文档"]
   end
 
-  S --> Q
-  A --> S
+  subgraph AGENT["智能体决策 agent_core.py"]
+    direction TB
+    REG["ToolRegistry<br/>注册 5 个工具定义"]
+    ST["AgentState<br/>多轮消息状态"]
+    CORE["AgentCore 决策循环<br/>DashScope qwen-plus function-calling"]
+    TOOLS["工具：rag_search<br/>web_search<br/>search_nearby_hospitals<br/>save_user_medical_record<br/>conflict_checker"]
+    REG --> CORE
+    ST --> CORE
+    CORE --> TOOLS
+  end
+
+  subgraph STORAGE["持久化"]
+    VS
+    UP["档案/用药 JSON (data/)"]
+    USERS["账号 (data/auth_users.json)"]
+    KBSTATS["knowledge_base_stats.json"]
+  end
+
+  U["用户 / 浏览器"] --> UI
+  UI --> LOGIN
+  LOGIN --> TABS
+  TABS --> SERVICES
+  TABS --> AGENT
+  TABS --> RAG
+  AGENT -- rag_search --> RAG
+  AGENT -- web_search --> WS
+  AGENT -- search_nearby_hospitals --> GEO
+  AGENT -- save_user_medical_record --> UD
+  AGENT -- conflict_checker --> DINT
+  UD <--> UP
+  AUTH --> USERS
+  DINT --> RAG
+  KB_BUILD --> STORAGE
+  RAG --> STORAGE

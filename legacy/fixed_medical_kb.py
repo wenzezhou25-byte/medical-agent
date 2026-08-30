@@ -5,7 +5,7 @@ import tempfile
 import shutil
 from pathlib import Path
 import numpy as np
-from langchain_community.vectorstores import FAISS
+from vector_store import VectorStore
 import fitz  # PyMuPDF
 from embedding_provider import get_embeddings
 
@@ -339,7 +339,7 @@ def rebuild_optimized_knowledge_base():
         texts = [doc["page_content"] for doc in all_documents]
         metadatas = [doc["metadata"] for doc in all_documents]
 
-        vectorstore = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
+        vectorstore = VectorStore.from_texts(texts, embeddings, metadatas=metadatas)
 
         # 4. 保存优化后的向量库
         if os.path.exists(VECTOR_STORE_PATH):
@@ -397,7 +397,7 @@ def test_optimized_retrieval():
 
     # 加载优化后的向量库和文档
     embeddings = get_embeddings()
-    vectorstore = FAISS.load_local(
+    vectorstore = VectorStore.load_local(
         OPTIMIZED_VECTOR_STORE_PATH,
         embeddings,
         allow_dangerous_deserialization=True

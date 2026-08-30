@@ -1,0 +1,685 @@
+{
+  "指标性质": "非准确率指标，仅供候选药抽样查看；不作为 RAG 检索性能依据",
+  "测试总数": 18,
+  "命中数": 2,
+  "候选药抽样·命中数(非指标)": "2/18",
+  "详细结果": [
+    {
+      "question": "我发烧了，该吃什么退烧药？",
+      "note": "发热·解热镇痛药",
+      "expected_tokens": [
+        "布洛芬",
+        "对乙酰氨基酚"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "牛黄消炎灵胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.3025
+        },
+        {
+          "source_name": "复方牛黄消炎胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.3025
+        },
+        {
+          "source_name": "小儿清解冲剂",
+          "section_title": "适应症",
+          "rerank_score": 0.218
+        },
+        {
+          "source_name": "感冒药片",
+          "section_title": "适应症",
+          "rerank_score": 0.0802
+        },
+        {
+          "source_name": "柏子滋心丸",
+          "section_title": "禁忌",
+          "rerank_score": 0.0601
+        }
+      ]
+    },
+    {
+      "question": "嗓子疼，轻微感冒，吃点什么好？",
+      "note": "咽痛·清热利咽",
+      "expected_tokens": [
+        "板蓝根颗粒",
+        "连花清瘟"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "双花草珊瑚含片",
+          "section_title": "适应症",
+          "rerank_score": 0.3889
+        },
+        {
+          "source_name": "复方川贝清喉喷雾剂",
+          "section_title": "适应症",
+          "rerank_score": 0.296
+        },
+        {
+          "source_name": "感冒炎咳灵片",
+          "section_title": "适应症",
+          "rerank_score": 0.2171
+        },
+        {
+          "source_name": "感冒炎咳灵颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.1997
+        },
+        {
+          "source_name": "牛黄噙化丸",
+          "section_title": "适应症",
+          "rerank_score": 0.182
+        }
+      ]
+    },
+    {
+      "question": "一直干咳没有痰，用什么药？",
+      "note": "无痰干咳·镇咳",
+      "expected_tokens": [
+        "右美沙芬"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "橘红胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.6234
+        },
+        {
+          "source_name": "川贝清肺糖浆",
+          "section_title": "适应症",
+          "rerank_score": 0.5255
+        },
+        {
+          "source_name": "橘红丸",
+          "section_title": "适应症",
+          "rerank_score": 0.4065
+        },
+        {
+          "source_name": "橘红颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.4065
+        },
+        {
+          "source_name": "复方气管炎胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.3803
+        }
+      ]
+    },
+    {
+      "question": "感冒流清鼻涕、鼻塞，吃什么药？",
+      "note": "感冒·通窍对症",
+      "expected_tokens": [
+        "复方氨酚",
+        "氨酚曲麻"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "伤风净喷雾剂",
+          "section_title": "适应症",
+          "rerank_score": 0.7858
+        },
+        {
+          "source_name": "盐酸伪麻黄碱缓释片",
+          "section_title": "适应症",
+          "rerank_score": 0.318
+        },
+        {
+          "source_name": "“明通”治伤风颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.2622
+        },
+        {
+          "source_name": "萘普生钠伪麻黄碱缓释片",
+          "section_title": "适应症",
+          "rerank_score": 0.2495
+        },
+        {
+          "source_name": "氨咖敏片",
+          "section_title": "适应症",
+          "rerank_score": 0.2249
+        }
+      ]
+    },
+    {
+      "question": "反酸、烧心，有什么药能缓解？",
+      "note": "胃食管反流·抑酸或中和",
+      "expected_tokens": [
+        "奥美拉唑",
+        "西咪替丁",
+        "铝碳酸镁"
+      ],
+      "命中药": "奥美拉唑",
+      "命中位置": 0,
+      "是否命中": true,
+      "Top证据": [
+        {
+          "source_name": "奥美拉唑肠溶胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.8344
+        },
+        {
+          "source_name": "奥美拉唑胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.8344
+        },
+        {
+          "source_name": "西咪替丁片",
+          "section_title": "适应症",
+          "rerank_score": 0.4825
+        },
+        {
+          "source_name": "法莫替丁咀嚼片",
+          "section_title": "适应症",
+          "rerank_score": 0.4785
+        },
+        {
+          "source_name": "盐酸雷尼替丁胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.4785
+        }
+      ]
+    },
+    {
+      "question": "拉肚子，吃什么止泻？",
+      "note": "腹泻·黏膜保护",
+      "expected_tokens": [
+        "蒙脱石"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "芪枣健胃茶",
+          "section_title": "适应症",
+          "rerank_score": 0.5934
+        },
+        {
+          "source_name": "小儿腹泻宁糖浆",
+          "section_title": "适应症",
+          "rerank_score": 0.5796
+        },
+        {
+          "source_name": "小儿腹泻宁袋泡茶",
+          "section_title": "适应症",
+          "rerank_score": 0.5796
+        },
+        {
+          "source_name": "温脾固肠散",
+          "section_title": "适应症",
+          "rerank_score": 0.4808
+        },
+        {
+          "source_name": "温脾止泻丸",
+          "section_title": "适应症",
+          "rerank_score": 0.4808
+        }
+      ]
+    },
+    {
+      "question": "便秘好几天了，吃什么药通便？",
+      "note": "便秘·润滑或渗透性泻药",
+      "expected_tokens": [
+        "开塞露",
+        "乳果糖"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "排毒养颜片",
+          "section_title": "用法用量",
+          "rerank_score": 0.5835
+        },
+        {
+          "source_name": "排毒养颜胶囊",
+          "section_title": "用法用量",
+          "rerank_score": 0.5835
+        },
+        {
+          "source_name": "便秘通",
+          "section_title": "适应症",
+          "rerank_score": 0.3883
+        },
+        {
+          "source_name": "双金胃肠胶囊",
+          "section_title": "不良反应",
+          "rerank_score": 0.3172
+        },
+        {
+          "source_name": "芦荟排毒养颜胶囊",
+          "section_title": "用法用量",
+          "rerank_score": 0.2462
+        }
+      ]
+    },
+    {
+      "question": "身上过敏起疹子、很痒，吃什么药？",
+      "note": "过敏瘙痒·抗组胺",
+      "expected_tokens": [
+        "氯雷他定"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "如意油",
+          "section_title": "不良反应",
+          "rerank_score": 0.6827
+        },
+        {
+          "source_name": "林可霉素维B6乳膏",
+          "section_title": "不良反应",
+          "rerank_score": 0.4483
+        },
+        {
+          "source_name": "盐酸左西替利嗪分散片",
+          "section_title": "适应症",
+          "rerank_score": 0.2959
+        },
+        {
+          "source_name": "白药胶囊",
+          "section_title": "不良反应",
+          "rerank_score": 0.1948
+        },
+        {
+          "source_name": "跌打药酒",
+          "section_title": "不良反应",
+          "rerank_score": 0.1304
+        }
+      ]
+    },
+    {
+      "question": "哮喘发作喘不过气，用什么药缓解？",
+      "note": "哮喘·短效支气管扩张",
+      "expected_tokens": [
+        "沙丁胺醇"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "喘息灵胶囊",
+          "section_title": "用法用量",
+          "rerank_score": 0.6067
+        },
+        {
+          "source_name": "色甘酸钠气雾剂",
+          "section_title": "注意事项",
+          "rerank_score": 0.5553
+        },
+        {
+          "source_name": "吡嘧司特钾片",
+          "section_title": "注意事项",
+          "rerank_score": 0.5103
+        },
+        {
+          "source_name": "银黄平喘气雾剂",
+          "section_title": "适应症",
+          "rerank_score": 0.4298
+        },
+        {
+          "source_name": "吡嘧司特钾分散片",
+          "section_title": "注意事项",
+          "rerank_score": 0.4075
+        }
+      ]
+    },
+    {
+      "question": "过敏性鼻炎老打喷嚏，用什么药？",
+      "note": "过敏性鼻炎·鼻喷或抗组胺",
+      "expected_tokens": [
+        "布地奈德",
+        "氯雷他定"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "特非那丁分散片",
+          "section_title": "适应症",
+          "rerank_score": 0.659
+        },
+        {
+          "source_name": "特非那丁颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.659
+        },
+        {
+          "source_name": "特非那丁胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.659
+        },
+        {
+          "source_name": "特非那定胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.659
+        },
+        {
+          "source_name": "复方麻黄碱色甘酸钠膜",
+          "section_title": "适应症",
+          "rerank_score": 0.5912
+        }
+      ]
+    },
+    {
+      "question": "吃完饭胃胀不消化，吃什么药？",
+      "note": "消化不良·促胃动力",
+      "expected_tokens": [
+        "多潘立酮"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "开胃丸",
+          "section_title": "适应症",
+          "rerank_score": 0.7572
+        },
+        {
+          "source_name": "消食健胃片",
+          "section_title": "适应症",
+          "rerank_score": 0.6274
+        },
+        {
+          "source_name": "小儿进食片",
+          "section_title": "适应症",
+          "rerank_score": 0.6274
+        },
+        {
+          "source_name": "食消饮",
+          "section_title": "适应症",
+          "rerank_score": 0.6145
+        },
+        {
+          "source_name": "清热通淋胶囊",
+          "section_title": "不良反应",
+          "rerank_score": 0.5953
+        }
+      ]
+    },
+    {
+      "question": "查出高血压，平时吃哪种降压药？",
+      "note": "高血压·钙拮抗剂",
+      "expected_tokens": [
+        "硝苯地平"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "复方四嗪利血平片",
+          "section_title": "适应症",
+          "rerank_score": 0.8438
+        },
+        {
+          "source_name": "厄贝沙坦片",
+          "section_title": "用法用量",
+          "rerank_score": 0.7431
+        },
+        {
+          "source_name": "伊贝沙坦片",
+          "section_title": "用法用量",
+          "rerank_score": 0.7416
+        },
+        {
+          "source_name": "厄贝沙坦分散片",
+          "section_title": "用法用量",
+          "rerank_score": 0.7416
+        },
+        {
+          "source_name": "厄贝沙坦",
+          "section_title": "用法用量",
+          "rerank_score": 0.628
+        }
+      ]
+    },
+    {
+      "question": "2型糖尿病，需要吃什么降糖药？",
+      "note": "2型糖尿病·双胍类",
+      "expected_tokens": [
+        "二甲双胍"
+      ],
+      "命中药": "二甲双胍",
+      "命中位置": 0,
+      "是否命中": true,
+      "Top证据": [
+        {
+          "source_name": "二甲双胍格列本脲胶囊",
+          "section_title": "用法用量",
+          "rerank_score": 0.9651
+        },
+        {
+          "source_name": "盐酸罗格列酮胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.9495
+        },
+        {
+          "source_name": "二甲双胍马来酸罗格列酮片",
+          "section_title": "适应症",
+          "rerank_score": 0.9071
+        },
+        {
+          "source_name": "酒石酸罗格列酮片",
+          "section_title": "适应症",
+          "rerank_score": 0.752
+        },
+        {
+          "source_name": "酒石酸罗格列酮分散片",
+          "section_title": "适应症",
+          "rerank_score": 0.7314
+        }
+      ]
+    },
+    {
+      "question": "咳嗽痰多，吃什么化痰止咳的药好？",
+      "note": "痰湿咳嗽·化痰",
+      "expected_tokens": [
+        "急支糖浆",
+        "川贝"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "杏仁止咳颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.9246
+        },
+        {
+          "source_name": "复方气管炎胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.8624
+        },
+        {
+          "source_name": "止咳橘红口服液",
+          "section_title": "适应症",
+          "rerank_score": 0.8069
+        },
+        {
+          "source_name": "止咳橘红胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.8069
+        },
+        {
+          "source_name": "止咳橘红颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.8069
+        }
+      ]
+    },
+    {
+      "question": "流感发烧浑身酸痛，吃什么药？",
+      "note": "流感·清热解毒或对症",
+      "expected_tokens": [
+        "连花清瘟",
+        "复方氨酚",
+        "对乙酰氨基酚"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "美扑伪麻胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.8798
+        },
+        {
+          "source_name": "氨酚曲麻片",
+          "section_title": "适应症",
+          "rerank_score": 0.7616
+        },
+        {
+          "source_name": "复方忍冬藤阿司匹林片",
+          "section_title": "适应症",
+          "rerank_score": 0.5396
+        },
+        {
+          "source_name": "氨酚咖黄烷胺片",
+          "section_title": "适应症",
+          "rerank_score": 0.438
+        },
+        {
+          "source_name": "氨麻美敏片",
+          "section_title": "适应症",
+          "rerank_score": 0.3523
+        }
+      ]
+    },
+    {
+      "question": "踢球扭伤了脚踝，用什么药缓解肿痛？",
+      "note": "跌打损伤·活血止痛",
+      "expected_tokens": [
+        "云南白药"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "五面星除湿酊",
+          "section_title": "适应症",
+          "rerank_score": 0.7841
+        },
+        {
+          "source_name": "祛伤消肿酊",
+          "section_title": "适应症",
+          "rerank_score": 0.7619
+        },
+        {
+          "source_name": "克伤痛气雾剂",
+          "section_title": "适应症",
+          "rerank_score": 0.7166
+        },
+        {
+          "source_name": "竭红跌打酊",
+          "section_title": "适应症",
+          "rerank_score": 0.5738
+        },
+        {
+          "source_name": "梁财信跌打丸",
+          "section_title": "适应症",
+          "rerank_score": 0.5176
+        }
+      ]
+    },
+    {
+      "question": "天热中暑恶心，吃什么药舒服些？",
+      "note": "中暑·解表化湿",
+      "expected_tokens": [
+        "藿香正气"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "桂香祛暑散",
+          "section_title": "适应症",
+          "rerank_score": 0.8444
+        },
+        {
+          "source_name": "无极丸",
+          "section_title": "适应症",
+          "rerank_score": 0.742
+        },
+        {
+          "source_name": "五黄膏",
+          "section_title": "适应症",
+          "rerank_score": 0.742
+        },
+        {
+          "source_name": "清凉含片",
+          "section_title": "适应症",
+          "rerank_score": 0.5792
+        },
+        {
+          "source_name": "流感茶",
+          "section_title": "适应症",
+          "rerank_score": 0.3324
+        }
+      ]
+    },
+    {
+      "question": "头痛得厉害，吃什么止痛药管用？",
+      "note": "头痛·解热镇痛",
+      "expected_tokens": [
+        "布洛芬",
+        "对乙酰氨基酚"
+      ],
+      "命中药": null,
+      "命中位置": null,
+      "是否命中": false,
+      "Top证据": [
+        {
+          "source_name": "芎芷止痛颗粒",
+          "section_title": "适应症",
+          "rerank_score": 0.7704
+        },
+        {
+          "source_name": "治偏痛胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.7059
+        },
+        {
+          "source_name": "晕痛定片",
+          "section_title": "适应症",
+          "rerank_score": 0.6813
+        },
+        {
+          "source_name": "仔花感冒片",
+          "section_title": "适应症",
+          "rerank_score": 0.3952
+        },
+        {
+          "source_name": "仔花感冒胶囊",
+          "section_title": "适应症",
+          "rerank_score": 0.3952
+        }
+      ]
+    }
+  ]
+}

@@ -7,10 +7,10 @@
 ## 功能概览
 
 - 本地 PDF 知识库构建：支持从 `data/*.pdf` 或 Streamlit 上传 PDF 构建 FAISS 向量索引。
-- RAG 医疗问答：基于 LangChain、FAISS、BM25、DashScope 通义模型实现本地证据优先的问答。
+- RAG 医疗问答：基于 FAISS、BM25、fastembed 和 DashScope 通义模型（qwen-plus）实现本地证据优先的问答，配合基于 function-calling 的智能体工具编排。
 - 混合检索与 rerank：结合向量检索和 BM25 关键词检索，适配药名、剂量、禁忌、不良反应等精确查询。
 - 证据引用：回答中要求引用文件名、页码和章节，证据不足时明确说明缺少哪类依据。
-- 四分类回答：强制模型先输出明确结论，如“可以按说明书使用”“不建议自行使用”“禁止/避免使用”“当前知识库无法判断”。
+- 结论分类：强制模型先输出明确结论，如“可以按说明书使用”“不建议自行使用”“禁止/避免使用”“当前知识库无法判断”。
 - 家庭健康档案：支持多家庭成员档案、过敏史、慢病史和当前用药记录。
 - 用药计划和打卡：支持记录用药计划、服药时间和每日打卡。
 - 药物冲突粗筛：根据本地知识库检索药物相互作用、禁忌和风险关键词。
@@ -21,72 +21,49 @@
 
 - Python
 - Streamlit
-- LangChain
 - FAISS
-- BM25
-- FastEmbed / 本地 Hash Embedding fallback
-- DashScope 通义千问
+- BM25 + fastembed
+- DashScope 通义千问（qwen-plus function-calling）
 - 高德地图 Web API
-- PyMuPDF / PyPDF
+- PyMuPDF
 
 ## 系统架构
 
-```mermaid
-flowchart LR
-  U["用户 / 浏览器"] --> S["Streamlit app.py"]
+当前架构已演进为「扁平模块 + 智能体决策」结构，与代码一起维护的架构图见
+[docs/architecture.mmd](docs/architecture.mmd)（预览见 [docs/architecture.png](docs/architecture.png)）。
 
-  subgraph "知识库构建"
-    P["PDF 文件 data/*.pdf 或上传"] --> L["PDF Loader"]
-    L --> C["文本清洗与结构化切块"]
-    C --> E["Embedding"]
-    E --> V["FAISS vector_store"]
-    C --> M["文档 metadata"]
-  end
+简要分层：
 
-  subgraph "RAG 问答链路"
-    Q["用户问题"] --> R["Hybrid Retriever"]
-    V --> R
-    R --> B["BM25 + 向量召回"]
-    B --> RR["轻量 rerank"]
-    RR --> F["format_docs_for_prompt"]
-    F --> PT["PromptTemplate 四分类结论"]
-    PT --> LLM["ChatTongyi"]
-    LLM --> A["带证据回答"]
-  end
-
-  subgraph "家庭健康功能"
-    S --> UP["用户档案 JSON"]
-    S --> MP["用药计划 / 打卡 JSON"]
-    S --> DI["药物冲突粗筛"]
-  end
-
-  subgraph "附近医院"
-    S --> AM["高德地图 API"]
-    AM --> POI["多关键词 POI 召回"]
-    POI --> SORT["类型评分 + 路线距离排序"]
-  end
-
-  S --> Q
-  A --> S
+```text
+Streamlit 应用层 app.py
+  ├── 可复用业务模块：auth / user_data / geo_hospital / web_search / drug_interaction
+  ├── 智能体决策   agent_core.py（ToolRegistry + AgentCore 决策循环）
+  ├── 混合检索     rag_utils.py（向量 + JiebaBM25 + 已知药名扩展，可选 bge-reranker）
+  └── 知识库       原生 FAISS（vector_store.py）+ fastembed + retrieval_core.py
 ```
-
-架构图源码见 [docs/architecture.mmd](docs/architecture.mmd)。
 
 ## 目录结构
 
 ```text
 .
-├── app.py                    # Streamlit 主应用
-├── rag_utils.py              # 文档结构化、混合检索、rerank、证据格式化
-├── build_knowledge_base.py   # 从 data/*.pdf 构建本地 FAISS 知识库
-├── embedding_provider.py     # FastEmbed / Hash embedding 封装
-├── evaluate_rag.py           # 检索评测脚本
-├── replay_eval.py            # 回放评测脚本
+├── app.py                    # Streamlit 主应用（UI + 路由 + 缓存编排）
+├── agent_core.py             # 智能体决策（ToolRegistry + AgentCore，qwen-plus 选工具）
+├── rag_utils.py              # 混合检索、证据格式化（向量 + JiebaBM25 + 已知药名扩展）
+├── retrieval_core.py         # Chunk / 递归切分 / JiebaBM25（原生检索组件）
+├── vector_store.py           # 原生 FAISS 存取（index.faiss + chunks.json）
+├── embedding_provider.py     # fastembed 封装
+├── build_drug_kb_from_dataset.py  # 从 CHIP-2025 数据集构建家庭用药 FAISS 知识库
+├── auth.py                   # 登录/注册（PBKDF2 哈希）
+├── user_data.py              # 家庭档案、用药计划读写
+├── geo_hospital.py           # 高德地图附近医院
+├── web_search.py             # Tavily 联网搜索
+├── drug_interaction.py       # 药物冲突检测
 ├── config.py                 # 环境变量和路径配置
-├── data/                     # PDF、用户档案、用药记录
+├── eval/                     # 评测脚本 + 测试集 + eval_sets 产物
+├── legacy/                   # 废弃脚本与旧评测产物归档
+├── data/                     # 运行时数据（用户档案、用药记录）
 ├── vector_store/             # FAISS 索引
-├── eval_sets/                # 评测集和评测报告
-└── docs/                     # 架构图等项目文档
+└── docs/                     # 架构图（.mmd/.png）等项目文档
 ```
 
 ## 环境配置
@@ -141,45 +118,33 @@ D:\ananconda3\envs\medical_agent\python.exe -m streamlit run app.py --server.por
 
 ## 构建知识库
 
-方式一：命令行从 `data/*.pdf` 构建：
+默认从 CHIP-2025 药品说明书数据集构建“常见家庭用药”知识库（脚本会自动下载数据集、清洗并过滤后入库）：
 
 ```powershell
-D:\ananconda3\envs\medical_agent\python.exe build_knowledge_base.py
+D:\ananconda3\envs\medical_agent\python.exe build_drug_kb_from_dataset.py
 ```
 
-方式二：在 Streamlit 左侧“共享知识库”上传 PDF 并重建索引。
+> 仅保留常见家庭用药（感冒、肠胃、抗过敏、维生素、常用抗生素、降压/降糖/降脂等），
+> 通过「药名 + 适应症 + 成分」匹配，排除注射剂、肿瘤/化疗等非家庭用药；过滤规则见
+> `build_drug_kb_from_dataset.py` 中的 `EXCLUDE_KEYWORDS` / `INCLUDE_KEYWORDS`。
 
-知识库重建采用 staging 目录保存和加载校验，校验成功后再替换旧 `vector_store`，失败时保留旧索引。
+如需（历史方式）从本地 PDF 构建，可改用 Streamlit 左侧“共享知识库”上传 PDF 重建索引。
 
 ## 评测
 
 编译检查：
 
 ```powershell
-D:\ananconda3\envs\medical_agent\python.exe -m py_compile app.py rag_utils.py
-```
-
-FAISS 基础测试：
-
-```powershell
-D:\ananconda3\envs\medical_agent\python.exe test_faiss.py
+D:\ananconda3\envs\medical_agent\python.exe -m py_compile app.py agent_core.py rag_utils.py
 ```
 
 检索评测：
 
 ```powershell
-D:\ananconda3\envs\medical_agent\python.exe evaluate_rag.py --questions eval_sets/blind_questions_2026-05-10.json --report eval_sets/blind_report_tmp.json --top-k 7
+D:\ananconda3\envs\medical_agent\python.exe eval\evaluate_rag.py --questions eval/eval_sets/blind_questions_2026-05-10.json --report eval/eval_sets/blind_report_tmp.json --top-k 7
 ```
 
-当前本地验证结果：
-
-```text
-py_compile app.py rag_utils.py: 通过
-test_faiss.py: 通过，FAISS 1.13.2
-evaluate_rag.py: 7/7，整体检索准确率 100.0%
-```
-
-> 注意：当前 blind set 样本量较小，7/7 只能说明当前冻结评测集通过，不能代表真实医疗问答全场景准确率。
+> 评测工作流的完整说明（生成冻结盲测集、运行评测、回放评测）见 [eval_workflow.md](eval_workflow.md)。
 
 ## 示例问题
 
@@ -205,6 +170,7 @@ evaluate_rag.py: 7/7，整体检索准确率 100.0%
 - 针对药品说明书类问题引入 BM25 + 向量混合召回，兼顾语义相似和精确词匹配。
 - 在工程层面处理了知识库重建失败回滚、密码哈希升级、外部 API 异常处理等可靠性问题。
 - 附近医疗机构推荐不只按 POI 距离，而是结合医疗机构类型和驾车路线距离排序。
+- 工程上已把 `app.py` 拆分为认证、地图、RAG、用药计划、联网搜索和药物冲突等可复用模块，便于测试与维护。
 
 ## 局限性
 
@@ -212,4 +178,3 @@ evaluate_rag.py: 7/7，整体检索准确率 100.0%
 - 当前评测集规模较小，仍需要扩充生成质量评测和人工回放测试。
 - 药物冲突检测是基于检索和关键词的粗筛，不是严格药学知识图谱。
 - 医院推荐依赖高德地图 API，真实效果需要结合 API key、城市和地址进行人工验证。
-- `app.py` 仍较大，后续可拆分为认证、地图、RAG、用药计划和知识库服务等模块。

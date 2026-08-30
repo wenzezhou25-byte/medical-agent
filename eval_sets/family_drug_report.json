@@ -1,0 +1,1611 @@
+{
+  "测试总数": 47,
+  "准确数": 47,
+  "整体检索准确率": "100.0%",
+  "分类统计": {
+    "drug_insert": {
+      "测试数": 47,
+      "准确数": 47,
+      "准确率": "100.0%"
+    }
+  },
+  "详细结果": [
+    {
+      "问题": "B型流感嗜血杆菌疫苗的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "肌肉注射",
+        "一次",
+        "臀部"
+      ],
+      "匹配关键词": [
+        "肌肉注射",
+        "一次",
+        "臀部"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "B型流感嗜血杆菌疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 45.9
+        }
+      ],
+      "gold_sources": [
+        "B型流感嗜血杆菌疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "B型流感嗜血杆菌疫苗的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每日",
+        "临床",
+        "对照"
+      ],
+      "匹配关键词": [
+        "每日",
+        "临床",
+        "对照"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "B型流感嗜血杆菌疫苗",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 41.1
+        }
+      ],
+      "gold_sources": [
+        "B型流感嗜血杆菌疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "B族维生素含片的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "清除",
+        "疲劳",
+        "提高"
+      ],
+      "匹配关键词": [
+        "清除",
+        "疲劳",
+        "提高"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "B族维生素含片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 35.2
+        },
+        {
+          "source_name": "艾兰得牌B族维生素含片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 32.2
+        }
+      ],
+      "gold_sources": [
+        "B族维生素含片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "B族维生素含片的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "维生素",
+        "B1",
+        "维生素"
+      ],
+      "匹配关键词": [
+        "维生素",
+        "B1",
+        "维生素"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "B族维生素含片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 27.8
+        },
+        {
+          "source_name": "奥莱健B族维生素含片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 24.8
+        },
+        {
+          "source_name": "艾兰得牌B族维生素含片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 24.8
+        }
+      ],
+      "gold_sources": [
+        "B族维生素含片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "B族维生素片的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "参与",
+        "多种",
+        "生理"
+      ],
+      "匹配关键词": [
+        "参与",
+        "多种",
+        "生理"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "天然B族维生素片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 0.1138
+        },
+        {
+          "source_name": "汤臣倍健牌多种维生素片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 0.0733
+        },
+        {
+          "source_name": "敖东牌多种维生素片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 0.0173
+        }
+      ],
+      "gold_sources": [
+        "B族维生素片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 0.1429
+    },
+    {
+      "问题": "DHA-EPA的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "强健",
+        "脑力",
+        "增强"
+      ],
+      "匹配关键词": [
+        "强健",
+        "脑力",
+        "增强"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "DHA-EPA",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 13.6
+        }
+      ],
+      "gold_sources": [
+        "DHA-EPA"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "L-赖氨酸盐酸盐颗粒的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "抗生素",
+        "必须",
+        "青霉素"
+      ],
+      "匹配关键词": [
+        "抗生素",
+        "必须",
+        "青霉素"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "L-赖氨酸盐酸盐颗粒",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 41.1
+        }
+      ],
+      "gold_sources": [
+        "L-赖氨酸盐酸盐颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "L-赖氨酸盐酸盐颗粒的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "氨基酸",
+        "类药",
+        "氨基"
+      ],
+      "匹配关键词": [
+        "氨基酸",
+        "类药",
+        "氨基"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "L-赖氨酸盐酸盐颗粒",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 33.8
+        }
+      ],
+      "gold_sources": [
+        "L-赖氨酸盐酸盐颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "L-门冬氨酸氨氯地平的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "一日",
+        "肝功能",
+        "通常"
+      ],
+      "匹配关键词": [
+        "一日",
+        "肝功能",
+        "通常"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "L-门冬氨酸氨氯地平",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 42.3
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 39.3
+        }
+      ],
+      "gold_sources": [
+        "L-门冬氨酸氨氯地平"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "L-门冬氨酸氨氯地平的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "不良反应",
+        "常见",
+        "头痛"
+      ],
+      "匹配关键词": [
+        "不良反应",
+        "常见",
+        "头痛"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "L-门冬氨酸氨氯地平",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 39.9
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 36.9
+        }
+      ],
+      "gold_sources": [
+        "L-门冬氨酸氨氯地平"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "L-门冬氨酸氨氯地平片的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "一日",
+        "肝功能",
+        "通常"
+      ],
+      "匹配关键词": [
+        "一日",
+        "肝功能",
+        "通常"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 49.9
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 49.9
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 42.3
+        }
+      ],
+      "gold_sources": [
+        "L-门冬氨酸氨氯地平片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 0.5
+    },
+    {
+      "问题": "L-门冬氨酸氨氯地平片的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "不良反应",
+        "常见",
+        "头痛"
+      ],
+      "匹配关键词": [
+        "不良反应",
+        "常见",
+        "头痛"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 49.5
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平片",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 49.5
+        },
+        {
+          "source_name": "L-门冬氨酸氨氯地平",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 41.9
+        }
+      ],
+      "gold_sources": [
+        "L-门冬氨酸氨氯地平片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 0.5
+    },
+    {
+      "问题": "OB纤体素软胶囊的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "保护",
+        "眼睛",
+        "有助于"
+      ],
+      "匹配关键词": [
+        "保护",
+        "眼睛",
+        "有助于"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "OB纤体素软胶囊",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 34.0
+        }
+      ],
+      "gold_sources": [
+        "OB纤体素软胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌偶联疫苗的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "肌注",
+        "10",
+        "月者"
+      ],
+      "匹配关键词": [
+        "肌注",
+        "10",
+        "月者"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 54.3
+        },
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 51.3
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌偶联疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌偶联疫苗的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "免疫",
+        "接种",
+        "3d"
+      ],
+      "匹配关键词": [
+        "免疫",
+        "接种",
+        "3d"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 48.3
+        },
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 45.3
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌偶联疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "肌注",
+        "10",
+        "月者"
+      ],
+      "匹配关键词": [
+        "肌注",
+        "10",
+        "月者"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 75.9
+        },
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 55.5
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "不足",
+        "周龄",
+        "婴儿"
+      ],
+      "匹配关键词": [
+        "不足",
+        "周龄",
+        "婴儿"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 69.9
+        },
+        {
+          "source_name": "b型流感嗜血杆菌偶联疫苗",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 51.9
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌偶联疫苗-重组乙型肝炎疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌结合疫苗的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "疫苗",
+        "适用",
+        "以上"
+      ],
+      "匹配关键词": [
+        "疫苗",
+        "适用",
+        "以上"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌结合疫苗",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 47.2
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌结合疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "b型流感嗜血杆菌结合疫苗的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "肌肉注射",
+        "口服",
+        "静脉注射"
+      ],
+      "匹配关键词": [
+        "肌肉注射",
+        "口服",
+        "静脉注射"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "b型流感嗜血杆菌结合疫苗",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 56.7
+        }
+      ],
+      "gold_sources": [
+        "b型流感嗜血杆菌结合疫苗"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β-环糊精吡罗昔康片的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "忌食",
+        "生冷",
+        "辛辣"
+      ],
+      "匹配关键词": [
+        "忌食",
+        "生冷",
+        "辛辣"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β-环糊精吡罗昔康片",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 42.3
+        }
+      ],
+      "gold_sources": [
+        "β-环糊精吡罗昔康片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β-环糊精吡罗昔康片的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "鱼腥草",
+        "麻黄",
+        "石膏"
+      ],
+      "匹配关键词": [
+        "鱼腥草",
+        "麻黄",
+        "石膏"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β-环糊精吡罗昔康片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 33.8
+        }
+      ],
+      "gold_sources": [
+        "β-环糊精吡罗昔康片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β-胡萝卜素软胶嚢的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "保护",
+        "眼睛",
+        "有助于"
+      ],
+      "匹配关键词": [
+        "保护",
+        "眼睛",
+        "有助于"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β-胡萝卜素软胶嚢",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 31.6
+        }
+      ],
+      "gold_sources": [
+        "β-胡萝卜素软胶嚢"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β-胡萝卜素软胶囊的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每日",
+        "无论",
+        "素食主义者"
+      ],
+      "匹配关键词": [
+        "每日",
+        "无论",
+        "素食主义者"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β-胡萝卜素软胶囊",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 37.6
+        }
+      ],
+      "gold_sources": [
+        "β-胡萝卜素软胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β-胡萝卜素软胶囊的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "首次",
+        "发现",
+        "包装"
+      ],
+      "匹配关键词": [
+        "首次",
+        "发现",
+        "包装"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β-胡萝卜素软胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 38.7
+        }
+      ],
+      "gold_sources": [
+        "β-胡萝卜素软胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β胡萝卜素胶囊的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "不良反应",
+        "每日",
+        "复方"
+      ],
+      "匹配关键词": [
+        "不良反应",
+        "每日",
+        "复方"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β胡萝卜素胶囊",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 35.1
+        },
+        {
+          "source_name": "复方β-胡萝卜素胶囊",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 32.1
+        }
+      ],
+      "gold_sources": [
+        "β胡萝卜素胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "β胡萝卜素胶囊的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "肾功能",
+        "严重",
+        "损害"
+      ],
+      "匹配关键词": [
+        "肾功能",
+        "严重",
+        "损害"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "β胡萝卜素胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 35.1
+        },
+        {
+          "source_name": "复方β-胡萝卜素胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 32.1
+        }
+      ],
+      "gold_sources": [
+        "β胡萝卜素胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "“明通”治伤风颗粒的不良反应是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "可见",
+        "恶心",
+        "头痛"
+      ],
+      "匹配关键词": [
+        "可见",
+        "恶心",
+        "头痛"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "“明通”治伤风颗粒",
+          "page": "1",
+          "section_title": "不良反应",
+          "document_type": "drug_insert",
+          "rerank_score": 32.7
+        }
+      ],
+      "gold_sources": [
+        "“明通”治伤风颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "“明通”治伤风颗粒的禁忌是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "马来酸",
+        "氯苯",
+        "那敏"
+      ],
+      "匹配关键词": [
+        "马来酸",
+        "氯苯",
+        "那敏"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "“明通”治伤风颗粒",
+          "page": "1",
+          "section_title": "禁忌",
+          "document_type": "drug_insert",
+          "rerank_score": 26.7
+        },
+        {
+          "source_name": "明通治伤风颗粒",
+          "page": "1",
+          "section_title": "禁忌",
+          "document_type": "drug_insert",
+          "rerank_score": 23.7
+        }
+      ],
+      "gold_sources": [
+        "“明通”治伤风颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一合丹牌绿屏胶囊的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "100g",
+        "番茄红素",
+        "780mg"
+      ],
+      "匹配关键词": [
+        "100g",
+        "番茄红素",
+        "780mg"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一合丹牌绿屏胶囊",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 33.8
+        }
+      ],
+      "gold_sources": [
+        "一合丹牌绿屏胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一品康天然B族维生素片的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每片",
+        "维生素",
+        "B1"
+      ],
+      "匹配关键词": [
+        "每片",
+        "维生素",
+        "B1"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "维体康牌B族维生素片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 0.7227
+        },
+        {
+          "source_name": "红阳牌钙铁锌硒维生素片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 0.7126
+        },
+        {
+          "source_name": "一品康天然B族维生素片",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 0.7081
+        }
+      ],
+      "gold_sources": [
+        "一品康天然B族维生素片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 0.3333
+    },
+    {
+      "问题": "一扫光药膏的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每日",
+        "一次",
+        "涂敷"
+      ],
+      "匹配关键词": [
+        "每日",
+        "一次",
+        "涂敷"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一扫光药膏",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 25.5
+        }
+      ],
+      "gold_sources": [
+        "一扫光药膏"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一捻金的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每次",
+        "忌食",
+        "生冷"
+      ],
+      "匹配关键词": [
+        "每次",
+        "忌食",
+        "生冷"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一捻金",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 18.3
+        }
+      ],
+      "gold_sources": [
+        "一捻金"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一捻金胶囊的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "口服",
+        "一次",
+        "一日"
+      ],
+      "匹配关键词": [
+        "口服",
+        "一次",
+        "一日"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一捻金胶囊",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 35.5
+        },
+        {
+          "source_name": "一捻金",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 24.3
+        }
+      ],
+      "gold_sources": [
+        "一捻金胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一枝蒿伤湿祛痛膏的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "哺乳期",
+        "过敏",
+        "外用药"
+      ],
+      "匹配关键词": [
+        "哺乳期",
+        "过敏",
+        "外用药"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一枝蒿伤湿祛痛膏",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 36.3
+        },
+        {
+          "source_name": "伤湿祛痛膏",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 25.5
+        }
+      ],
+      "gold_sources": [
+        "一枝蒿伤湿祛痛膏"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清片的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "清热泻火",
+        "解毒",
+        "化瘀"
+      ],
+      "匹配关键词": [
+        "清热泻火",
+        "解毒",
+        "化瘀"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清片",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 23.2
+        }
+      ],
+      "gold_sources": [
+        "一清片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清片的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "孕妇",
+        "哺乳期",
+        "过敏"
+      ],
+      "匹配关键词": [
+        "孕妇",
+        "哺乳期",
+        "过敏"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清片",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 24.3
+        }
+      ],
+      "gold_sources": [
+        "一清片"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清胶囊的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "清热",
+        "燥湿",
+        "泻火"
+      ],
+      "匹配关键词": [
+        "清热",
+        "燥湿",
+        "泻火"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清胶囊",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 26.8
+        }
+      ],
+      "gold_sources": [
+        "一清胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清胶囊的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每日",
+        "过敏",
+        "孕妇"
+      ],
+      "匹配关键词": [
+        "每日",
+        "过敏",
+        "孕妇"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 27.9
+        }
+      ],
+      "gold_sources": [
+        "一清胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清软胶囊的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "清热泻火",
+        "解毒",
+        "化瘀"
+      ],
+      "匹配关键词": [
+        "清热泻火",
+        "解毒",
+        "化瘀"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清软胶囊",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 30.4
+        }
+      ],
+      "gold_sources": [
+        "一清软胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清颗粒的适应症是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "清热泻火",
+        "解毒",
+        "火毒"
+      ],
+      "匹配关键词": [
+        "清热泻火",
+        "解毒",
+        "火毒"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清颗粒",
+          "page": "1",
+          "section_title": "适应症",
+          "document_type": "drug_insert",
+          "rerank_score": 26.8
+        }
+      ],
+      "gold_sources": [
+        "一清颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "一清颗粒的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "每日",
+        "孕妇",
+        "哺乳期"
+      ],
+      "匹配关键词": [
+        "每日",
+        "孕妇",
+        "哺乳期"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "一清颗粒",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 27.9
+        }
+      ],
+      "gold_sources": [
+        "一清颗粒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "丁公藤风湿药酒的成分是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "丁公藤",
+        "桂枝",
+        "麻黄"
+      ],
+      "匹配关键词": [
+        "丁公藤",
+        "桂枝",
+        "麻黄"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "丁公藤风湿药酒",
+          "page": "1",
+          "section_title": "成分",
+          "document_type": "drug_insert",
+          "rerank_score": 24.2
+        }
+      ],
+      "gold_sources": [
+        "丁公藤风湿药酒"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "丁桂儿脐贴的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "过敏",
+        "外用药",
+        "内服"
+      ],
+      "匹配关键词": [
+        "过敏",
+        "外用药",
+        "内服"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "丁桂儿脐贴",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 25.5
+        }
+      ],
+      "gold_sources": [
+        "丁桂儿脐贴"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "丁桂温胃散的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "过敏",
+        "忌食",
+        "生冷"
+      ],
+      "匹配关键词": [
+        "过敏",
+        "忌食",
+        "生冷"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "复胃散胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 0.6737
+        },
+        {
+          "source_name": "活胃散",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 0.6638
+        },
+        {
+          "source_name": "复胃散片",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 0.6045
+        }
+      ],
+      "gold_sources": [
+        "丁桂温胃散"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 0.1667
+    },
+    {
+      "问题": "丁桂温胃胶囊的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "过敏",
+        "忌食",
+        "生冷"
+      ],
+      "匹配关键词": [
+        "过敏",
+        "忌食",
+        "生冷"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "丁桂温胃胶囊",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 35.1
+        }
+      ],
+      "gold_sources": [
+        "丁桂温胃胶囊"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "丁硼乳膏的用法用量是什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "一次",
+        "一日",
+        "乳膏"
+      ],
+      "匹配关键词": [
+        "一次",
+        "一日",
+        "乳膏"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "丁硼乳膏",
+          "page": "1",
+          "section_title": "用法用量",
+          "document_type": "drug_insert",
+          "rerank_score": 31.9
+        }
+      ],
+      "gold_sources": [
+        "丁硼乳膏"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    },
+    {
+      "问题": "丁硼乳膏的注意事项需要注意什么？",
+      "分类": "drug_insert",
+      "预期关键词": [
+        "过敏",
+        "坏死性",
+        "牙龈炎"
+      ],
+      "匹配关键词": [
+        "过敏",
+        "坏死性",
+        "牙龈炎"
+      ],
+      "匹配率": "100.0%",
+      "是否准确": true,
+      "Top证据": [
+        {
+          "source_name": "丁硼乳膏",
+          "page": "1",
+          "section_title": "注意事项",
+          "document_type": "drug_insert",
+          "rerank_score": 25.9
+        }
+      ],
+      "gold_sources": [
+        "丁硼乳膏"
+      ],
+      "Recall@7_命中": true,
+      "MRR@7_贡献": 1.0
+    }
+  ],
+  "评测说明": [
+    "采用混合检索(BM25 + 向量)后再进行轻量重排。",
+    "按 family_drug_questions.json 中的 expected_keywords 与同义词表进行命中评估。",
+    "优先区分药品说明书题(drug_insert)与泛医学题(disease_general)进行分类统计。",
+    "匹配率达到 60% 及以上视为本题检索准确。"
+  ],
+  "文档级指标": {
+    "标注题总数": 47,
+    "Recall@7": "100.0%",
+    "MRR@7": 0.9286,
+    "分类统计": {
+      "drug_insert": {
+        "标注题数": 47,
+        "Recall@7": "100.0%",
+        "MRR@7": 0.9286
+      }
+    },
+    "说明": "仅对包含 gold_sources 或 gold_evidence 的样本统计。"
+  }
+}

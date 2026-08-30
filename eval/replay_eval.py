@@ -1,9 +1,14 @@
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-from langchain_community.vectorstores import FAISS
+# 脚本移入 eval/ 子目录后，需手动把项目根加入 sys.path 以便导入顶层模块
+if str(Path(__file__).resolve().parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from vector_store import VectorStore
 
 from config import VECTOR_STORE_PATH
 from embedding_provider import get_embeddings
@@ -41,7 +46,7 @@ def replay_evaluate(input_path: Path, report_path: Path, top_k: int) -> None:
 
     rows = _read_replay_queries(input_path)
     embeddings = get_embeddings()
-    vectorstore = FAISS.load_local(
+    vectorstore = VectorStore.load_local(
         VECTOR_STORE_PATH,
         embeddings,
         allow_dangerous_deserialization=True,
