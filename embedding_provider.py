@@ -19,12 +19,16 @@ from typing import Iterable, List
 
 from config import BASE_DIR, get_env
 
-DEFAULT_EMBEDDING_PROVIDER = get_env("EMBEDDING_PROVIDER", "auto").lower()
+# 默认 provider 取 EMBEDDING_PROVIDER，缺省与 config.EMBEDDING_PROVIDER 一致为 fastembed
+# （原缺省 "auto" 与 config.py 的 "fastembed" 不一致，属窗口期隐患，已统一）。
+DEFAULT_EMBEDDING_PROVIDER = get_env("EMBEDDING_PROVIDER", "fastembed").lower()
 DEFAULT_EMBEDDING_MODEL = get_env("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
 DEFAULT_EMBEDDING_CACHE_DIR = get_env(
     "EMBEDDING_CACHE_DIR",
     str(BASE_DIR / ".cache" / "fastembed"),
 )
+# EMBEDDING_DIM 仅作为「纯 hash 回退」的兜底维度；fastembed 路径会由 get_embeddings()
+# 把 fallback 维度对齐到主模型（bge 系列 384 维），故不应再被独立用于主模型。
 DEFAULT_HASH_DIM = int(get_env("EMBEDDING_DIM", "512"))
 DEFAULT_HF_ENDPOINT = get_env("HF_ENDPOINT", "")
 
@@ -64,6 +68,9 @@ class LocalHashEmbeddings:
 
     def embed_query(self, text: str) -> List[float]:
         return self._embed_text(text)
+
+    def get_dim(self) -> int:
+        return self.dimension
 
 
 class FastEmbedEmbeddings:
@@ -111,28 +118,51 @@ class FastEmbedEmbeddings:
         vec = next(model.query_embed(str(text)))
         return list(map(float, vec))
 
+    def get_dim(self) -> int:
+        """探测模型输出维度，首次调用会触发模型加载。"""
+        vec = self.embed_query("")
+        return len(vec)
+
 
 class ResilientEmbeddings:
-    """优先使用主 embedding，运行时失败则自动回退到备用 embedding。"""
+    """优先使用主 embedding，运行时失败则自动回退到备用 embedding。
+
+    只允许在**建库/文档向量**阶段回退（配合 `degraded` 标志由上层决定是否中止）；
+    查询阶段不允许静默回退——主模型与 hash 是不同向量空间，回退给出的相似度无意义，
+    会静默污染结果，故查询失败直接抛错，提示重建知识库。
+    """
 
     def __init__(self, primary, fallback):
         self.primary = primary
         self.fallback = fallback
+        self._degraded = False
+
+    @property
+    def degraded(self) -> bool:
+        """是否曾发生过主 embedding 回退（可能造成向量空间不一致）。"""
+        return self._degraded
+
+    def get_dim(self) -> int:
+        return self.primary.get_dim()
 
     def embed_documents(self, texts: Iterable[str]) -> List[List[float]]:
         text_list = list(texts)
         try:
             return self.primary.embed_documents(text_list)
         except Exception as exc:
-            print(f"[embedding_provider] 主 embedding 文档向量失败，自动回退: {exc}")
+            self._degraded = True
+            print(f"[embedding_provider] 主 embedding 文档向量失败，已标记 degraded 并回退: {exc}")
             return self.fallback.embed_documents(text_list)
 
     def embed_query(self, text: str) -> List[float]:
         try:
             return self.primary.embed_query(text)
         except Exception as exc:
-            print(f"[embedding_provider] 主 embedding 查询向量失败，自动回退: {exc}")
-            return self.fallback.embed_query(text)
+            self._degraded = True
+            raise RuntimeError(
+                "主 embedding 查询失败（可能已发生向量空间不一致），"
+                "无法用 hash 向量替代，请检查 EMBEDDING_PROVIDER/模型配置或重建知识库。"
+            ) from exc
 
 
 def _build_fastembed_embeddings():
@@ -158,6 +188,9 @@ def get_embeddings():
     if provider in {"fastembed", "auto"}:
         try:
             primary = _build_fastembed_embeddings()
+            # fallback 维度与 primary 对齐（例如 bge 系列输出 512 维），
+            # 而非沿用 DEFAULT_HASH_DIM，避免主/备维度不一致导致 index.search 崩溃。
+            fallback = LocalHashEmbeddings(dimension=primary.get_dim())
             return ResilientEmbeddings(primary=primary, fallback=fallback)
         except Exception as exc:
             print(f"[embedding_provider] FastEmbed 初始化失败，自动回退到 hashing: {exc}")

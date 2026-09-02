@@ -20,6 +20,7 @@ from config import BASE_DATA_PATH, VECTOR_STORE_PATH
 from embedding_provider import get_embeddings
 from retrieval_core import Chunk
 from vector_store import VectorStore
+from rag_utils import sanitize_untrusted_text
 
 if sys.platform == "win32":
     os.environ.setdefault("PYTHONIOENCODING", "utf-8")
@@ -105,31 +106,66 @@ def download() -> Path:
 
 
 def iter_rows(path: Path):
-    """流式逐条解析 JSON 数组，避免一次性把全部记录加载进内存。
+    """流式逐条解析 JSON 数组合集，避免一次性把全部数据读入内存。
+
+    原实现用 f.read() 整文件载入；数据集可达数百 MB，这里改为「分块读 + 滚动缓冲」：
+    raw_decode 逐条解析出完整 JSON 元素后，丢弃已消费头部、保留尾部半截，
+    再补充下一个分块继续，整个过程内存峰值仅约 1 个缓冲块 + 单个元素大小。
 
     返回 (药名, 说明书正文) 迭代器。
     """
-    with open(path, "r", encoding="utf-8") as f:
-        data = f.read()
-
     decoder = json.JSONDecoder()
-    idx = 0
-    n = len(data)
-    # 跳过数组开头的空白与 '['
-    while idx < n and data[idx] in " \t\r\n[":
-        idx += 1
+    buffer = ""
+    buf_chunk = 1 * 1024 * 1024  # 每次补充约 1MB
+    saw_open = False  # 是否已定位到数组开头的 '['
 
-    while idx < n:
-        # 跳过元素之间的空白与逗号
-        while idx < n and data[idx] in " \t\r\n,":
-            idx += 1
-        if idx >= n or data[idx] == "]":
-            break
-        item, idx = decoder.raw_decode(data, idx)
-        name = item.get("input") or item.get("drug") or ""
-        output = item.get("output") or ""
-        if name and output:
-            yield name, output
+    with open(path, "r", encoding="utf-8") as f:
+        while True:
+            chunk = f.read(buf_chunk)
+            if chunk:
+                buffer += chunk
+
+            # 尚未定位数组开头：跳过开头的空白与 '['（允许 '[' 跨分块迟到）
+            if not saw_open:
+                stripped = buffer.lstrip(" \t\r\n")
+                if stripped.startswith("["):
+                    buffer = stripped[1:]
+                    saw_open = True
+                elif not chunk:
+                    return  # EOF 仍未见到数组开头，视为非法 JSON，安全退出
+                else:
+                    # 分块里还没有 '['，但缓冲区可能仍被空白占满，只保留尾部继续读
+                    buffer = buffer[-1000:] if buffer else ""
+                    continue
+
+            # 在当前缓冲中尽量多地解析出完整元素
+            n = len(buffer)
+            consumed = 0
+            i = 0
+            while i < n:
+                while i < n and buffer[i] in " \t\r\n,":
+                    i += 1
+                if i >= n or buffer[i] == "]":
+                    break
+                try:
+                    item, nxt = decoder.raw_decode(buffer, i)
+                except json.JSONDecodeError:
+                    break  # 尾部半截，等下一个分块补全
+                name = item.get("input") or item.get("drug") or ""
+                output = item.get("output") or ""
+                if name and output:
+                    yield name, output
+                i = nxt
+                consumed = nxt
+
+            # 丢弃已消费头部，保留未消费尾部（半截元素得以跨分块累积）
+            buffer = buffer[consumed:]
+
+            if not chunk:
+                # EOF：剩余若尽是空白/逗号/] 则正常结束
+                if not buffer.strip(" \t\r\n,]"):
+                    return
+                return  # 残余为不完整元素，安全退出
 
 
 def clean_output(text: str) -> str:
@@ -218,6 +254,8 @@ def build_structured_drug_documents(rows) -> list[Chunk]:
         if len(cleaned.strip()) <= 20:
             continue
         for section_index, (title, content) in enumerate(split_fields(cleaned)):
+            # P1-10：入库前净化（去除控制字符 + 中和指令注入片段）
+            content = sanitize_untrusted_text(content)
             if len(content.strip()) <= 20:
                 continue
             docs.append(
@@ -276,6 +314,12 @@ def main():
             vectorstore = VectorStore.from_documents(batch, embeddings)
         else:
             vectorstore.add_documents(batch)
+        # 一旦 embedding 发生降级回退，本批向量与其他批不在同一向量空间，
+        # 继续写入会让整库检索失真；必须在落盘前中止。
+        if getattr(embeddings, "degraded", False):
+            print("❌ embedding 发生降级回退，向量空间可能不一致，已中止构建。"
+                  "请检查模型文件/内存占用后重试（必要时先清理 .cache/fastembed）。", flush=True)
+            return
         done = min(start + batch_size, len(docs))
         print(f"  进度 {done}/{len(docs)}", flush=True)
 

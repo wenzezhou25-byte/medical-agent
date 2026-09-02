@@ -28,7 +28,7 @@ def hit_token(source_name, tokens):
 
 def main():
     questions = json.load(open(QUESTIONS, encoding="utf-8"))
-    vs = VectorStore.load_local(VECTOR_STORE_PATH, get_embeddings(), allow_dangerous_deserialization=True)
+    vs = VectorStore.load_local(VECTOR_STORE_PATH, get_embeddings())
     retriever = create_hybrid_retriever(vs, vector_k=8, bm25_k=12, vector_weight=0.65, bm25_weight=0.35)
 
     details, hit_n = [], 0

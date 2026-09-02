@@ -58,11 +58,47 @@ CHUNK_SIZE = 900
 CHUNK_OVERLAP = 180
 _DEFAULT_SEPARATORS = ["\n\n", "\n", "。", "；", "！", "？", "：", "，", " "]
 
+# 剂量/次数 token：硬切长文本时绝不在这些 token 中间切断（P2-13）
+_DOSE_TOKEN = re.compile(r"\d+(?:\.\d+)*\s*(?:mg|ml|g|ug|iu|单位|毫克|毫升|克|片|粒|次|天|日|袋|支|丸|滴|粒)")
+
+
+def _safe_hard_cut(text: str, chunk_size: int) -> List[str]:
+    """在无分隔符的兜底路径上硬切超长段，但避免在剂量/次数 token 中间切断。
+
+    在 [start, start+chunk_size) 窗口内找最后一个剂量 token 的结束位置，若它落在
+    窗口内部且剩余较短，则选择在其后切断而非机械地从 900 处拦腰截断，
+    从而保住“一日3次”“500mg”这类剂量表述不被拆成两半。
+    """
+    if len(text) <= chunk_size:
+        return [text]
+    out: List[str] = []
+    start = 0
+    n = len(text)
+    while start < n:
+        limit = min(start + chunk_size, n)
+        cut = limit
+        best = start
+        for m in _DOSE_TOKEN.finditer(text, start, limit):
+            if m.end() > best:
+                best = m.end()
+        if best > start and limit - best < chunk_size:
+            cut = best
+        out.append(text[start:cut])
+        start = cut
+    return out or [text]
+
 
 def _split_text_with_regex(text: str, separator: Optional[str]) -> List[str]:
     """按单个分隔符把 text 切成多段，分隔符不保留（与默认 keep_separator=False 一致）。"""
-    if not separator:  # 无有效分隔符 -> 按 CHUNK_SIZE 硬切
-        return [text[i:i + CHUNK_SIZE] for i in range(0, len(text), CHUNK_SIZE)] or ([text] if text else [])
+    if not separator:  # 无有效分隔符 -> 先按句级标点切自然边界，仍超长的段再做保护剂量的硬切
+        pieces = [s for s in re.split(r"(?<=[。！？；\n])", text) if s] or [text]
+        out: List[str] = []
+        for p in pieces:
+            if len(p) <= CHUNK_SIZE:
+                out.append(p)
+            else:
+                out.extend(_safe_hard_cut(p, CHUNK_SIZE))
+        return out
     return re.split(re.escape(separator), text)
 
 

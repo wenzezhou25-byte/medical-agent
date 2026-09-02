@@ -4,6 +4,8 @@
 从 app.py 拆出。不依赖 Streamlit。
 """
 import os
+import traceback
+
 import requests
 
 
@@ -27,10 +29,15 @@ def perform_web_search(query):
         data = resp.json()
         context_parts = []
         for i, res in enumerate(data.get("results", [])):
-            title = res.get("title", "无标题")
-            snippet = res.get("content", res.get("snippet", ""))
+            title = res.get("title", "无标题")[:80]
+            # P2-19：单条 snippet 截到 500 字，避免 advanced 深度内容撑爆上下文
+            snippet = (res.get("content") or res.get("snippet") or "")[:500]
             url = res.get("url", "")
             context_parts.append(f"{i + 1}. 【{title}】: {snippet} (来源：{url})")
-        return "【互联网最新资讯】:\n" + "\n".join(context_parts) + "\n"
+        # 总返回也控制在合理范围：仅保留前 3 条已截断的结果，防止极端情况膨胀
+        return "【互联网最新资讯】:\n" + "\n".join(context_parts[:3]) + "\n"
     except Exception as e:
-        return f"⚠️ 联网搜索出错：{str(e)}"
+        # P1-16：异常细节只进日志，回灌通用话术，避免泄漏内部信息
+        traceback.print_exc()
+        print(f"[web_search] 联网搜索失败：{e}")
+        return "⚠️ 联网搜索暂时不可用，请稍后重试。"

@@ -6,3 +6,6 @@ dashscope>=1.20,<2.0
 python-dotenv>=1.0,<2.0
 numpy>=2.0,<3.0
 fastembed>=0.3,<1.0
+
+# fastembed 隐式依赖，缺失会导致运行报 No module named 'pandas'
+pandas>=2.0,<3.0

@@ -108,7 +108,6 @@ def evaluate(
     vectorstore = VectorStore.load_local(
         VECTOR_STORE_PATH,
         embeddings,
-        allow_dangerous_deserialization=True,
     )
     retriever = create_hybrid_retriever(vectorstore, vector_k=8, bm25_k=10, vector_weight=0.65, bm25_weight=0.35)
     test_questions = load_test_questions(questions_path)

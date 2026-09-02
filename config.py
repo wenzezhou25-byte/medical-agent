@@ -51,6 +51,15 @@ RERANK_MODEL = get_env("RERANK_MODEL", "BAAI/bge-reranker-v2-m3")
 RERANK_MAX_LENGTH = int(get_env("RERANK_MAX_LENGTH", "1024"))
 RERANK_CACHE_DIR = get_env("RERANK_CACHE_DIR", str(BASE_DIR / ".cache" / "sentence_transformers"))
 
+# 若重排模型已在本机缓存，强制离线加载。必须在本模块(全项目最先加载)设置：
+# huggingface_hub 在 import 时就把 HF_HUB_OFFLINE 读成模块常量，之后再设不生效，
+# 导致无法访问 huggingface.co 时要联网重试 5 次、阻塞首次回答数十秒。
+if RERANK_ENABLED and os.path.isdir(
+    os.path.join(RERANK_CACHE_DIR, "models--" + RERANK_MODEL.replace("/", "--"))
+):
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["TRANSFORMERS_OFFLINE"] = "1"
+
 # RAG 检索结果低质量判定阈值（用于触发「本地检索不充分」的联网兜底 / 证据不足提示）。
 # 依据 rag_utils.rerank_documents 写入的 rerank_source 区分分数尺度：
 #   - rule  规则粗排分：< LOW_QUALITY_RULE_THRESHOLD(=0) 视为命中极弱/被降权

@@ -9,7 +9,7 @@ import json
 import hmac
 import hashlib
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import BASE_DATA_PATH
 
 # 密码哈希方案：
@@ -22,6 +22,11 @@ PBKDF2_HASH_BYTES = 32
 LEGACY_HASH_PREFIX = "sha256$"
 
 AUTH_USERS_PATH = os.path.join(BASE_DATA_PATH, "auth_users.json")
+
+# 连续失败锁定策略（P1-21，本地应用，偏保守）
+MAX_FAILED_ATTEMPTS = 5      # 连续失败次数达到该值即锁定
+LOCKOUT_MINUTES = 15         # 锁定时长
+LOGIN_SESSION_HOURS = 12     # 单次登录会话有效期
 
 
 def _legacy_sha256_hash(raw_password: str) -> str:
@@ -141,23 +146,74 @@ def register_account(username: str, password: str):
     return True, "注册成功，请登录。"
 
 
+def login_session_is_valid(login_ts) -> bool:
+    """判断一次登录时间戳是否仍在会话有效期内（P1-21）。"""
+    if not login_ts:
+        return False
+    try:
+        login_time = float(login_ts)
+    except (TypeError, ValueError):
+        return False
+    return (datetime.now().timestamp() - login_time) < LOGIN_SESSION_HOURS * 3600
+
+
 def authenticate_account(username: str, password: str):
-    """登录校验；若为旧版 sha256 账号，登录成功后自动迁移到 PBKDF2。"""
+    """登录校验（P1-21 加固）：
+
+    - 连续失败锁定：达到 MAX_FAILED_ATTEMPTS 次即锁定 LOCKOUT_MINUTES 分钟
+      （计数/锁定期存于 auth_users.json，key=username 的 user 记录）。
+    - 校验成功清除失败计数与锁定。
+    - 旧版 sha256 账号登录成功后自动迁移到 PBKDF2。
+
+    返回 (bool, message)。
+    """
     users = load_auth_users()
     username = (username or "").strip()
+    now = datetime.now()
     user = users.get(username)
+
+    # 账号不存在：不记失败数，避免通过提示差异暴露账号是否存在
     if not user:
-        return False
+        return False, "账号或密码错误"
+
+    # 已锁定：直接拒绝
+    locked_until = user.get("locked_until")
+    if locked_until:
+        try:
+            if datetime.fromisoformat(locked_until) > now:
+                return False, f"连续 {MAX_FAILED_ATTEMPTS} 次失败，账号已临时锁定，约 {LOCKOUT_MINUTES} 分钟内无法登录。"
+        except ValueError:
+            pass  # 非法时间戳：不阻断，继续正常校验
+
     stored_hash = user.get("password_hash") or ""
     raw_password = password or ""
     if not _verify_password(stored_hash, raw_password):
-        return False
+        attempts = int(user.get("failed_attempts") or 0) + 1
+        user["failed_attempts"] = attempts
+        if attempts >= MAX_FAILED_ATTEMPTS:
+            user["locked_until"] = (now + timedelta(minutes=LOCKOUT_MINUTES)).isoformat()
+            msg = f"连续 {MAX_FAILED_ATTEMPTS} 次失败，账号已锁定 {LOCKOUT_MINUTES} 分钟，请稍后再试。"
+        else:
+            msg = "账号或密码错误"
+        try:
+            save_auth_users(users)
+        except Exception:
+            print(traceback.format_exc())
+        return False, msg
+
+    # 登录成功：清除锁定与失败计数
+    if user.get("failed_attempts") or user.get("locked_until"):
+        user.pop("failed_attempts", None)
+        user.pop("locked_until", None)
     # 老账号迁移到新哈希格式
     if _is_legacy_hash(stored_hash):
         try:
             user["password_hash"] = hash_password(raw_password)
             user["migrated_to_pbkdf2_at"] = datetime.now().isoformat()
-            save_auth_users(users)
         except Exception:
             print(traceback.format_exc())
-    return True
+    try:
+        save_auth_users(users)
+    except Exception:
+        print(traceback.format_exc())
+    return True, "登录成功"

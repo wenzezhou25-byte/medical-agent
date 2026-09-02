@@ -174,49 +174,37 @@ def classify_query_type(query: str) -> str:
     return "general"
 
 
-_KNOWN_SOURCE_NAMES: Optional[set] = None
-
-
-def register_known_source_names(names):
-    """注册知识库内已知源文件名（药名），供泛名→标准名扩展使用。"""
-    global _KNOWN_SOURCE_NAMES
-    _KNOWN_SOURCE_NAMES = {str(n).strip() for n in names if str(n).strip()}
-
-
-def get_known_source_names() -> List[str]:
-    """返回知识库已注册的源文件名（药名）列表；未注册时返回空列表。"""
-    return sorted(_KNOWN_SOURCE_NAMES or ())
-
-
-def _strip_leading_noise(match: str) -> str:
+def _strip_leading_noise(match: str, known_names=None) -> str:
     """剥离正则贪心吞入的前缀噪声（如「我之前吃」），返回真正的药名。
 
-    优先用已注册标准药名做最长子串匹配。无注册时回退原始匹配（退化路径，
-    此时正则可能误吞前缀，但生产环境在创建检索器时即完成药名注册）。
+    优先用知识库已知标准药名做最长子串匹配。无已知药名时回退原始匹配（退化路径，
+    此时正则可能误吞前缀，生产环境会在检索链路基于向量库注入 known_names）。
     """
     name = str(match).strip()
-    if _KNOWN_SOURCE_NAMES:
-        for known in sorted(_KNOWN_SOURCE_NAMES, key=len, reverse=True):
+    if known_names:
+        for known in sorted(known_names, key=len, reverse=True):
             if known in name:
                 return known
     return name
 
 
-def extract_drug_name_candidates(query: str) -> List[str]:
+def extract_drug_name_candidates(
+    query: str, known_names=None
+) -> List[str]:
     query = query or ""
     candidates: List[str] = []
 
-    # 已知药名最长子串匹配（知识库已注册标准药名时最可靠）：
+    # 已知药名最长子串匹配（有知识库标准药名时最可靠）：
     # 能精准命中「布洛芬缓释胶囊」这类含剂型标准名，避免正则把「我之前吃」等
     # 动词/代词前缀一并吞入。名称越完整越优先。
-    if _KNOWN_SOURCE_NAMES:
-        for name in sorted(_KNOWN_SOURCE_NAMES, key=len, reverse=True):
+    if known_names:
+        for name in sorted(known_names, key=len, reverse=True):
             if name in query:
                 candidates.append(name)
 
     # 正则兜底：匹配「中文 + 剂型后缀」，并借助已知药名剥离前缀噪声。
     for match in DRUG_NAME_PATTERN.findall(query):
-        name = _strip_leading_noise(match)
+        name = _strip_leading_noise(match, known_names)
         if name not in candidates and len(name) >= 3:
             candidates.append(name)
 
@@ -239,20 +227,61 @@ def extract_drug_name_candidates(query: str) -> List[str]:
     if "来那度胺" in normalized:
         candidates.append("来那度胺")
 
+    # 泛名核心成分子串匹配：用户用裸泛名（无剂型）提问时也能被识别进候选。
+    # 对知识库已注册标准名剥剂型/盐前缀得核心成分（「阿莫西林胶囊」→「阿莫西林」），
+    # 若核心成分出现在 query 中，补入该核心名，使「阿莫西林」这类泛名可被缓存与检索命中。
+    if known_names:
+        _seen_cores = set()
+        for name in sorted(known_names, key=len):
+            core = _strip_dosage_and_salt(name)
+            if len(core) < 2 or core in _seen_cores or core in candidates:
+                continue
+            _seen_cores.add(core)
+            if core in query:
+                candidates.append(core)
+
     # 泛名→库内单方标准名扩展：当 query 完全未带剂型（如“二甲双胍肾功能不全时能用吗？”）
-    # 时，直接以泛名子串匹配会让复方制剂（二甲双胍格列本脲等）反超单方目标药。若已加载
+    # 时，直接以泛名子串匹配会让复方制剂（二甲双胍格列本脲等）反超单方目标药。若已知
     # 向量库药名，把泛名展开成库内“单成分”标准名（核心成分==泛名，如“盐酸二甲双胍片”），
     # 使 rerank 能触发含剂型精确命中(typed_match)把单方药锁定在顶部。
-    if _KNOWN_SOURCE_NAMES and not any(_name_has_dosage(n) for n in candidates):
+    if known_names and not any(_name_has_dosage(n) for n in candidates):
         generic_stems = [n for n in candidates if not _name_has_dosage(n)]
         for stem in generic_stems:
-            for name in sorted(_KNOWN_SOURCE_NAMES, key=len):
+            for name in sorted(known_names, key=len):
                 if name in candidates:
                     continue
                 if stem in name and _strip_dosage_and_salt(name) == stem:
                     candidates.append(name)
 
     return _unique_terms(candidates)
+
+
+def strip_drug_core(name: str) -> str:
+    """返回药物核心成分名（剥剂型+盐前缀），用于把同一药物的不同写法归并为一种。"""
+    return _strip_dosage_and_salt(name)
+
+
+def upsert_drug_cache(cache: List[str], name: str) -> None:
+    """按「核心成分」去重的 MRU 插入：同一药物只保留一条，重复提及刷新到末尾。
+
+    - 与缓存中核心成分相同的条目视为同一药物（如「布洛芬缓释胶囊」vs「布洛芬」），
+      先移除旧条目，避免同一味药被当成“两个药”参与双药指代；
+    - 合并时保留更具体的写法（含剂型优先，同具体度保留后提及的）；
+    - 末尾 = 最近提及，供指代消解取「最近焦点」。
+    """
+    if not name:
+        return
+    core = _strip_dosage_and_salt(name)
+    match_idx = None
+    for i, existing in enumerate(cache):
+        if existing and _strip_dosage_and_salt(existing) == core:
+            match_idx = i
+            break
+    if match_idx is not None:
+        existing = cache.pop(match_idx)
+        if _name_has_dosage(existing) and not _name_has_dosage(name):
+            name = existing
+    cache.append(name)
 
 
 DOSAGE_SUFFIXES = (
@@ -526,6 +555,14 @@ def get_reranker():
             return None
         if HF_ENDPOINT:
             os.environ.setdefault("HF_ENDPOINT", HF_ENDPOINT)
+        # 若本地缓存快照已完整存在，则强制离线加载，避免联网 HEAD 检查(如
+        # huggingface.co 不可达时长时间重试卡住首次回答)。
+        local_dir = os.path.join(
+            RERANK_CACHE_DIR, "models--" + RERANK_MODEL.replace("/", "--")
+        )
+        if os.path.isdir(local_dir):
+            os.environ["HF_HUB_OFFLINE"] = "1"
+            os.environ["TRANSFORMERS_OFFLINE"] = "1"
         from sentence_transformers import CrossEncoder
         _reranker = CrossEncoder(
             RERANK_MODEL,
@@ -539,10 +576,15 @@ def get_reranker():
     return _reranker
 
 
-def rerank_documents(query: str, docs: Sequence[Chunk], top_k: int = 5) -> List[Chunk]:
+def rerank_documents(
+    query: str,
+    docs: Sequence[Chunk],
+    top_k: int = 5,
+    known_names=None,
+) -> List[Chunk]:
     query_lower = query.lower()
     query_terms = extract_query_terms(query)
-    drug_name_candidates = extract_drug_name_candidates(query)
+    drug_name_candidates = extract_drug_name_candidates(query, known_names)
     query_type = classify_query_type(query)
     query_intents = {
         "drug_info": any(token in query for token in ["作用", "适应症", "主治", "用于"]),
@@ -667,9 +709,23 @@ def rerank_documents(query: str, docs: Sequence[Chunk], top_k: int = 5) -> List[
                         reverse=True,
                     )
                 merged = typed_kept + candidates
-                if len(merged) >= top_k:
-                    return merged[:top_k]
-                return (merged + reranked[:top_k])[:top_k]
+                # P2-11：merged 或补位用的 reranked 可能含同一文档（reranked 已含
+                # typed_kept），按 chunk_id 去重补齐，避免重复返回同一证据。
+                seen: set = set()
+                result: List[Chunk] = []
+                for doc in merged + reranked:
+                    key = doc.metadata.get("chunk_id") or (
+                        doc.metadata.get("source_name")
+                        + "|" + str(doc.metadata.get("section_title") or "")
+                        + "|" + (doc.page_content or "")
+                    )
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    result.append(doc)
+                    if len(result) >= top_k:
+                        break
+                return result
             except Exception as exc:
                 print(f"[rerank] cross-encoder 精排失败，回退规则分: {exc}")
 
@@ -719,6 +775,9 @@ class RetrieverBundle(NamedTuple):
     primary: object
     fallback: object | None = None
     all_documents: tuple[Chunk, ...] = ()
+    # 知识库已知药名（去重源文件名）。随 bundle 一起构建/重建，始终反映当前向量库，
+    # 空库时为空元组；由检索链路注入 extract_drug_name_candidates / rerank_documents。
+    known_names: tuple[str, ...] = ()
 
 
 class WeightedHybridRetriever:
@@ -776,11 +835,17 @@ def create_hybrid_retriever(
     vector_retriever = vectorstore.as_retriever(search_kwargs={"k": vector_k})
     documents = get_vectorstore_documents(vectorstore)
     if not documents:
-        return RetrieverBundle(primary=vector_retriever, fallback=None, all_documents=())
-    register_known_source_names(
-        str((doc.metadata or {}).get("source_name", "")).strip()
-        for doc in documents
-        if (doc.metadata or {}).get("source_name")
+        return RetrieverBundle(
+            primary=vector_retriever, fallback=None, all_documents=(), known_names=()
+        )
+    known_names = tuple(
+        sorted(
+            {
+                str((doc.metadata or {}).get("source_name", "")).strip()
+                for doc in documents
+                if (doc.metadata or {}).get("source_name")
+            }
+        )
     )
 
     bm25_retriever = _Bm25Retriever(JiebaBM25.from_chunks(documents), k=bm25_k)
@@ -791,7 +856,12 @@ def create_hybrid_retriever(
         bm25_weight=bm25_weight,
         vector_weight=vector_weight,
     )
-    return RetrieverBundle(primary=retriever, fallback=bm25_retriever, all_documents=tuple(documents))
+    return RetrieverBundle(
+        primary=retriever,
+        fallback=bm25_retriever,
+        all_documents=tuple(documents),
+        known_names=known_names,
+    )
 
 
 def _retrieve_evidence_docs_with_breakdown(retriever_bundle, query: str, top_k: int = 5):
@@ -805,6 +875,19 @@ def _retrieve_evidence_docs_with_breakdown(retriever_bundle, query: str, top_k: 
     primary = getattr(retriever_bundle, "primary", retriever_bundle)
     fallback = getattr(retriever_bundle, "fallback", None)
     all_documents = getattr(retriever_bundle, "all_documents", ())
+    # 知识库已知药名直接取自 bundle（构建时推导，始终反映当前向量库）；
+    # 兼容旧 bundle 未知该字段时回退到现场推导。
+    known_names = getattr(retriever_bundle, "known_names", ())
+    if not known_names and all_documents:
+        known_names = tuple(
+            sorted(
+                {
+                    str((doc.metadata or {}).get("source_name", "")).strip()
+                    for doc in all_documents
+                    if (doc.metadata or {}).get("source_name")
+                }
+            )
+        )
 
     t0 = time.perf_counter()
     try:
@@ -821,16 +904,11 @@ def _retrieve_evidence_docs_with_breakdown(retriever_bundle, query: str, top_k: 
         typed_docs = [doc for doc in docs if (doc.metadata or {}).get("document_type") == query_type]
         if typed_docs:
             docs = typed_docs
-    drug_name_candidates = extract_drug_name_candidates(query)
+    drug_name_candidates = extract_drug_name_candidates(query, known_names)
     # 兜底：用向量库中已有的真实药名对命中做最长匹配识别。
     # 覆盖正则白名单覆盖不到的名称（药膏/药酒/疫苗/含片/贴等后缀，字母开头的 B族/DHA-EPA/L-门冬…，
     # 引号包裹，以及无后缀药名），避免「相似药混淆」。名称越完整越优先。
-    if all_documents:
-        known_names = {
-            str((doc.metadata or {}).get("source_name", "")).strip()
-            for doc in all_documents
-            if (doc.metadata or {}).get("source_name")
-        }
+    if known_names:
         for name in sorted(known_names, key=len, reverse=True):
             if not name:
                 continue
@@ -869,7 +947,7 @@ def _retrieve_evidence_docs_with_breakdown(retriever_bundle, query: str, top_k: 
     breakdown["filter_ms"] = (time.perf_counter() - t0) * 1000
 
     t0 = time.perf_counter()
-    docs = rerank_documents(query, docs, top_k=top_k)
+    docs = rerank_documents(query, docs, top_k=top_k, known_names=known_names)
     breakdown["rerank_ms"] = (time.perf_counter() - t0) * 1000
 
     return docs, breakdown
@@ -920,6 +998,41 @@ def select_explicit_section_docs(query: str, docs: Sequence[Chunk]):
         if matched:
             return matched
     return None
+
+
+# ===================== 内容净化（P0-14 / P1-10） =====================
+# 统一防线：入库前（P1-10）与工具输出回灌前（P0-14 第三层）都调用。
+# 注意：这是第一道过滤，不是 100% 拦截；真正的兜底是「工具输出不可信」的
+# system prompt 约束 + 写工具隔离（save_user_medical_record 只收用户直接陈述）。
+_INJECTION_PATTERNS = [
+    r"忽略.{0,6}(之前|以上|上述|所有).{0,10}(指令|提示|规则|要求)",
+    r"(you are now|system prompt|ignore (all|previous) instructions)",
+    r"(请|请务必|你现在|立即)?调用\s*(save_user_medical_record|rag_search|web_search|conflict_checker|search_nearby_hospitals)",
+    r"(现在|从此|从现在)开始.{0,6}(扮演|你是|你就是)",
+    r"(忘记|无视).{0,4}(之前|所有)?.{0,6}(指令|对话|提示)",
+    r"请输出\s*(JSON|json|json格式)",
+]
+
+
+def sanitize_untrusted_text(text: Optional[str]) -> str:
+    """净化不可信文本：删除控制/隐形/双向翻转字符；命中注入模式时只剥离指令子串、
+    保留其余正文（避免整段误伤）；若剥离后已无有效内容则返回空串，由调用方整段丢弃。
+
+    注意：这是第一道软过滤，无法 100% 拦截；真正的兜底是「工具输出不可信」的
+    system prompt 约束 + 写工具隔离（save_user_medical_record 只收用户直接陈述）。
+    """
+    if not text:
+        return ""
+    # 控制字符 + 隐形/双向控制符。\u200b-\u200f 零宽、\ufeff BOM、\u2028\u2029 行/段分隔、
+    # \u202a-\u202e（LRE/RLE/PDF/LRO/RLO）与 \u2060-\u206f 为 PDF 隐藏反转注入的经典载体。
+    text = re.sub(
+        r"[\x00-\x1f\x7f\u200b-\u200f\ufeff\u2028\u2029\u202a-\u202e\u2060-\u206f]",
+        "",
+        text,
+    )
+    for pat in _INJECTION_PATTERNS:
+        text = re.sub(pat, "", text, flags=re.IGNORECASE)
+    return text.strip()
 
 
 def format_docs_for_prompt(docs: Sequence[Chunk]) -> str:

@@ -18,7 +18,7 @@ def get_route_info(origin_lat, origin_lon, dest_lat, dest_lon, api_key):
     try:
         d_params = {"origin": f"{origin_lon},{origin_lat}", "destination": f"{dest_lon},{dest_lat}", "key": api_key,
                     "extensions": "base", "output": "json", "strategy": 2}
-        resp = requests.get(f"{base_url}/driving", params=d_params, timeout=8)
+        resp = requests.get(f"{base_url}/driving", params=d_params, timeout=4)
         data = resp.json()
         if data.get("status") == "1" and data.get("route", {}).get("paths"):
             path = data["route"]["paths"][0]
@@ -35,7 +35,7 @@ def get_route_info(origin_lat, origin_lon, dest_lat, dest_lon, api_key):
     try:
         w_params = {"origin": f"{origin_lon},{origin_lat}", "destination": f"{dest_lon},{dest_lat}", "key": api_key,
                     "extensions": "base", "output": "json"}
-        resp = requests.get(f"{base_url}/walking", params=w_params, timeout=8)
+        resp = requests.get(f"{base_url}/walking", params=w_params, timeout=4)
         data = resp.json()
         if data.get("status") == "1" and data.get("route", {}).get("paths"):
             path = data["route"]["paths"][0]
@@ -63,7 +63,7 @@ def geocode_address(address, api_key):
         poi_resp = requests.get(
             "https://restapi.amap.com/v3/place/text",
             params={"keywords": address, "key": api_key, "output": "json", "offset": 1},
-            timeout=5,
+            timeout=3,
         )
         poi_data = poi_resp.json()
         if poi_data.get("status") == "1" and poi_data.get("pois"):
@@ -101,7 +101,7 @@ def search_poi_candidates(keyword, api_key, limit=8):
         resp = requests.get(
             "https://restapi.amap.com/v3/place/text",
             params={"keywords": str(keyword).strip(), "key": api_key, "output": "json", "offset": limit},
-            timeout=5,
+            timeout=3,
         )
         data = resp.json()
         if data.get("status") != "1" or not data.get("pois"):

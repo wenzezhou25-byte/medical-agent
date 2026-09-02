@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import re
 import tempfile
@@ -39,13 +39,13 @@ def advanced_pdf_cleaner(text):
 
     # 1. 处理连续重复字符（这是最关键的问题）
     # 匹配连续重复的单个字符
-    text = re.sub(r'(.){2,}', r'', text)
+    text = re.sub(r'(.)\1{2,}', r'\1', text)
 
     # 2. 处理重复的短语/词语（2-10个字符）
-    text = re.sub(r'(.{2,10}?)(){2,}', r'', text)
+    text = re.sub(r'(.{2,10}?)(\1){2,}', r'\1', text)
 
     # 3. 处理特定的医疗文档重复模式
-    text = re.sub(r'((?:[^\s]{2,8}\s*){1,3}?)(){2,}', r'', text)
+    text = re.sub(r'((?:[^\s]{2,8}\s*){1,3}?)(\1){2,}', r'\1', text)
 
     # 4. 处理特殊的医疗术语重复
     medical_patterns = [
@@ -56,35 +56,30 @@ def advanced_pdf_cleaner(text):
     ]
 
     for pattern in medical_patterns:
-        text = re.sub(f'({pattern})(\1)+', r'', text)
+        # f-string 里反向引用需写 \\1，避免被解释为八进制转义字符
+        text = re.sub(f'({pattern})(\\1)+', r'\1', text)
 
     # 5. 清理多余的空格和换行
     text = re.sub(r'\s+', ' ', text)
     text = ' '.join(text.split())
 
     # 6. 清理多余的标点符号
-    text = re.sub(r'([,.!?;:])+', r'', text)
+    text = re.sub(r'([,.!?;:])\1+', r'\1', text)
 
     # 7. 处理数字和单位重复
-    text = re.sub(r'(\d+年|\d+月|\d+日|\d+时|\d+分)\s*()+', r'', text)
+    text = re.sub(r'(\d+年|\d+月|\d+日|\d+时|\d+分)\s*(\1)+', r'\1', text)
 
     # 8. 清理页眉页脚模式
     text = re.sub(r'第\s*\d+\s*页\s*/\s*共\s*\d+\s*页', '', text)
     text = re.sub(r'第\d+页.*$', '', text, flags=re.MULTILINE)
 
     # 9. 移除过多的空行
-    text = re.sub(r'
-\s*
-\s*
-+', '
-
-', text)
+    text = re.sub(r'\n\s*\n+', '\n', text)
 
     cleaned_length = len(text)
     reduction_rate = (original_length - cleaned_length) / original_length * 100 if original_length > 0 else 0
 
     return text.strip(), reduction_rate
-
 
 def load_and_clean_pdf_with_pymupdf(pdf_path):
     """使用PyMuPDF加载PDF并进行高级清理"""
@@ -120,20 +115,13 @@ def medical_aware_chunking(text, max_chunk_size=800, overlap=200):
     """医疗文档感知的文本切分 - 保持语义完整性"""
     # 定义医疗文档的关键分割点
     medical_separators = [
-        r'
-\s*[一二三四五六七八九十][、.、]\s*',  # 一、二、三...这样的标题
-        r'
-\s*\d+[、.]\s*',  # 1. 2. 3...这样的编号
-        r'
-\s*[（\(][一二三四五六七八九十][）\)]\s*',  # （一）（二）这样的编号
-        r'
-\s*[（\(]\d+[）\)]\s*',  # （1）（2）这样的编号
-        r'
-\s*[章节][\s\d]*[:：]\s*',  # 章、节标题
-        r'
-\s*[,.，。！？；;]\s*',  # 标点符号（谨慎使用）
-        r'
-\s+',  # 换行
+        r'\s*[一二三四五六七八九十][、.、]\s*',  # 一、二、三...这样的标题
+        r'\s*\d+[、.]\s*',  # 1. 2. 3...这样的编号
+        r'\s*[（\(][一二三四五六七八九十][）\)]\s*',  # （一）（二）这样的编号
+        r'\s*[（\(]\d+[）\)]\s*',  # （1）（2）这样的编号
+        r'\s*[章节][\s\d]*[:：]\s*',  # 章、节标题
+        r'\s*[,.，。！？；;]\s*',  # 标点符号（谨慎使用）
+        r'\s+',  # 换行
         '。',  # 句号
         '；',  # 分号
         '，',  # 逗号
@@ -295,8 +283,7 @@ def rebuild_optimized_knowledge_base():
     total_processed = 0
 
     for i, pdf_file in enumerate(pdf_files, 1):
-        print(f"
-📄 处理第 {i}/{len(pdf_files)} 个文件: {pdf_file.name}")
+        print(f"📄 处理第 {i}/{len(pdf_files)} 个文件: {pdf_file.name}")
 
         pages = load_and_clean_pdf_with_pymupdf(pdf_file)
 
@@ -324,14 +311,12 @@ def rebuild_optimized_knowledge_base():
         reduction_rate = metadata.get("clean_reduction_rate", "0%")
         print(f"   ✅ 页面 {metadata['page']} 处理完成, 清理率: {reduction_rate}")
 
-    print(f"
-📊 处理完成:")
+    print(f"📊 处理完成:")
     print(f"   - 总共生成 {len(all_documents)} 个文本块")
     print(f"   - 平均长度: {sum(len(doc['page_content']) for doc in all_documents) / len(all_documents):.2f}")
 
     # 3. 生成向量库
-    print(f"
-🧠 正在生成向量索引...")
+    print(f"🧠 正在生成向量索引...")
     try:
         embeddings = get_embeddings()
 
@@ -400,7 +385,6 @@ def test_optimized_retrieval():
     vectorstore = VectorStore.load_local(
         OPTIMIZED_VECTOR_STORE_PATH,
         embeddings,
-        allow_dangerous_deserialization=True
     )
 
     # 加载文档
@@ -450,15 +434,13 @@ def test_optimized_retrieval():
             "top_similarities": [result['similarity'] for result in search_results[:3]]
         })
 
-        print(f"
-测试 {i + 1}: {question[:30]}...")
+        print(f"测试 {i + 1}: {question[:30]}...")
         print(f"  匹配: {matched_keywords}")
         print(f"  准确率: {match_rate * 100:.1f}% ({'✓' if is_correct else '✗'})")
         print(f"  相似度: {[f'{s:.3f}' for s in results[-1]['top_similarities']]}")
 
     overall_acc = correct_count / len(test_questions)
-    print(f"
-📈 优化版检索准确率: {overall_acc * 100:.1f}% ({correct_count}/{len(test_questions)})")
+    print(f"📈 优化版检索准确率: {overall_acc * 100:.1f}% ({correct_count}/{len(test_questions)})")
 
     # 保存测试结果
     test_results_path = os.path.join(OPTIMIZED_VECTOR_STORE_PATH, "test_results.json")
@@ -472,25 +454,21 @@ def test_optimized_retrieval():
 
 def analyze_improvements():
     """分析改进措施"""
-    print("
-🔍 改进措施分析:")
+    print("🔍 改进措施分析:")
     print("=" * 50)
     print("1. 文本清洗改进:")
     print("   - 解决了严重的文本重复问题")
     print("   - 保留了更多有效信息")
 
-    print("
-2. 医疗同义词扩展:")
+    print("2. 医疗同义词扩展:")
     print("   - '低盐' -> ['低钠', '少盐', '减盐', ...]")
     print("   - '解热镇痛' -> ['退烧', '止痛', '消炎', ...]")
 
-    print("
-3. 自实现相似度计算:")
+    print("3. 自实现相似度计算:")
     print("   - 无需sklearn依赖")
     print("   - 使用手动实现的余弦相似度")
 
-    print("
-4. 优化文本切分:")
+    print("4. 优化文本切分:")
     print("   - 保持医疗概念完整性")
     print("   - 适当的重叠确保上下文")
 
@@ -503,21 +481,17 @@ if __name__ == "__main__":
     analyze_improvements()
 
     # 询问是否重构
-    response = input("
-🔄 是否开始重构知识库? (y/n): ").lower()
+    response = input("🔄 是否开始重构知识库? (y/n): ").lower()
     if response in ['y', 'yes', '是']:
         success = rebuild_optimized_knowledge_base()
         if success:
-            print("
-✨ 知识库重构完成！")
+            print("✨ 知识库重构完成！")
             print("💡 现在可以使用 ./vector_store_optimized_v2 路径的知识库进行测试")
 
-            test_response = input("
-🧪 是否测试优化版检索效果? (y/n): ").lower()
+            test_response = input("🧪 是否测试优化版检索效果? (y/n): ").lower()
             if test_response in ['y', 'yes', '是']:
                 test_optimized_retrieval()
         else:
-            print("
-❌ 重构失败，请检查错误信息")
+            print("❌ 重构失败，请检查错误信息")
     else:
         print("👋 操作已取消")

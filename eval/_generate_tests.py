@@ -60,7 +60,7 @@ def pick_keywords(text):
 
 
 def main():
-    vs = VectorStore.load_local(VECTOR_STORE_PATH, get_embeddings(), allow_dangerous_deserialization=True)
+    vs = VectorStore.load_local(VECTOR_STORE_PATH, get_embeddings())
     docstore = getattr(vs, "docstore", None)
     docs = list(getattr(docstore, "_dict", {}).values())
 
