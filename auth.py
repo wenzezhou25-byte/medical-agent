@@ -5,12 +5,12 @@
 """
 import os
 import re
-import json
 import hmac
 import hashlib
 import traceback
 from datetime import datetime, timedelta
 from config import BASE_DATA_PATH
+from storage_io import load_json, atomic_write_json_encrypted
 
 # 密码哈希方案：
 # - 新账号使用 PBKDF2-HMAC-SHA256（带随机 salt + 高迭代次数），格式：
@@ -103,32 +103,18 @@ def _is_legacy_hash(stored_hash: str) -> bool:
 
 
 def load_auth_users():
-    if os.path.exists(AUTH_USERS_PATH):
-        try:
-            with open(AUTH_USERS_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            print(traceback.format_exc())
-            print("[auth] 账号数据读取失败，请检查 auth_users.json")
-    return {}
+    try:
+        data = load_json(AUTH_USERS_PATH)
+    except Exception:
+        print(traceback.format_exc())
+        print("[auth] 账号数据读取失败，请检查 auth_users.json")
+        return {}
+    return data or {}
 
 
 def save_auth_users(users):
-    os.makedirs(BASE_DATA_PATH, exist_ok=True)
-    # 先写临时文件再原子替换，避免写入中途崩溃损坏 auth_users.json
-    tmp_path = AUTH_USERS_PATH + ".tmp"
-    try:
-        with open(tmp_path, "w", encoding="utf-8") as f:
-            json.dump(users, f, ensure_ascii=False, indent=2)
-        os.replace(tmp_path, AUTH_USERS_PATH)
-    except Exception:
-        print(traceback.format_exc())
-        if os.path.exists(tmp_path):
-            try:
-                os.remove(tmp_path)
-            except OSError:
-                pass
-        raise
+    # 原子写入（统一走 storage_io，与 user_data 落盘一致）；配置密钥时加密落盘。
+    atomic_write_json_encrypted(AUTH_USERS_PATH, users)
 
 
 def register_account(username: str, password: str):

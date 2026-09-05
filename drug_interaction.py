@@ -9,6 +9,7 @@
 关键词启发式仅作为 LLM 不可用时的回退（fallback），不再作为主判定。
 不依赖 Streamlit。
 """
+import concurrent.futures
 import json
 import re
 
@@ -19,6 +20,7 @@ from config import LLM_MODEL, get_required_env
 from rag_utils import (
     format_docs_for_prompt,
     retrieve_evidence_docs,
+    strip_drug_core,
 )
 
 # 旧关键词启发式（仅在 LLM 分类失败时兜底使用）
@@ -86,12 +88,13 @@ def _parse_interaction_json(content):
     }
 
 
-def _cross_validate(verdict, evidence_text, docs):
+def _cross_validate(verdict, evidence_text, docs, drug_a="", drug_b=""):
     """LLM 二分类之上叠加证据交叉校验 + 保守默认（P2-20）。
 
     - LLM 判「无冲突」但证据命中强禁忌词 → 保守升级为「疑似冲突，建议复核」，
       不能只信 LLM 一句话。
-    - LLM 判「严重」但证据缺失/过短 → 降级为「中度」，避免低证据支撑的臆断。
+    - LLM 判「严重」但证据缺失/过短/与两药无关 → 降级为「中度」，避免低证据支撑的臆断。
+    - has_conflict=true 时 risk_level 不得为「无」，避免「阻断保存但显示无风险」的矛盾。
     """
     verdict = dict(verdict)
     risky = verdict.get("risk_level") or "无"
@@ -103,7 +106,28 @@ def _cross_validate(verdict, evidence_text, docs):
         risky = "无"
         verdict["risk_level"] = risky
 
-    strong_hit = any(kw in evidence for kw in _STRONG_CONTRADICTION)
+    # --- #3：一致性规则。has_conflict=true 而 risk_level=「无」时语义矛盾
+    # （上层会把「无风险」误读为可直接放行，实际却阻断保存），保守落回「中度」。
+    if verdict.get("has_conflict") and risky == "无":
+        risky = "中度"
+        verdict["risk_level"] = risky
+
+    # --- #1：强禁忌词只对证据「正文」判断，不包含 format_docs_for_prompt 生成的 header。
+    # header 的「章节=禁忌」等字段会自身命中强禁忌词，叠加 rerank 对禁忌/相互作用章节的
+    # boost，会导致「无冲突」被大面积误升级为冲突。
+    evidence_body = "\n".join((d.page_content or "") for d in relevant_docs)
+
+    def _name_in_body(name):
+        if not name or not name.strip():
+            return True
+        name = name.strip()
+        return (name in evidence_body) or (strip_drug_core(name) in evidence_body)
+
+    # --- #2：两药都要出现在证据正文才视为「相关证据」。任一缺失即证据不足/无关（如检到
+    # 单药禁忌，或根本检到别的药），此时既不该升级冲突，也不应支撑「严重」臆断。
+    evidence_relevant = _name_in_body(drug_a) and _name_in_body(drug_b)
+
+    strong_hit = evidence_relevant and any(kw in evidence_body for kw in _STRONG_CONTRADICTION)
     strong = "、".join(_STRONG_CONTRADICTION)
 
     # 1) 无冲突但证据含强禁忌表述 → 保守升级 + 提示复核
@@ -118,11 +142,11 @@ def _cross_validate(verdict, evidence_text, docs):
         ).strip()
         verdict["suggestion"] = "证据提示存在禁忌/禁用表述，联用前请先向医生或药师确认。"
 
-    # 2) 判「严重」但证据缺失/过短 → 降级为「中度」，避免高估
+    # 2) 判「严重」但证据缺失/过短/与两药无关 → 降级为「中度」，避免高估
     if verdict.get("has_conflict") and risky == "严重":
-        if (not relevant_docs) or (not evidence) or len(evidence) < 20:
+        if (not relevant_docs) or (not evidence) or len(evidence) < 20 or not evidence_relevant:
             verdict["risk_level"] = "中度"
-            verdict["suggestion"] = "当前证据不足，无法确定相互作用严重程度，建议咨询医生或药师。"
+            verdict["suggestion"] = "当前证据不足或与两药相关度不足，无法确定相互作用严重程度，建议咨询医生或药师。"
 
     return verdict
 
@@ -136,25 +160,36 @@ def _classify_interaction_llm(drug_a, drug_b, evidence_text, docs):
     dashscope.api_key = api_key
 
     prompt = _build_interaction_prompt(drug_a, drug_b, evidence_text)
-    response = Generation.call(
-        model=LLM_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        result_format="message",
-        stream=False,
-    )
 
-    if response.status_code != 200:
-        raise RuntimeError(f"LLM 调用失败: {response.message} (code={response.code})")
+    def _request_content():
+        response = Generation.call(
+            model=LLM_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            result_format="message",
+            stream=False,
+        )
+        if response.status_code != 200:
+            raise RuntimeError(f"LLM 调用失败: {response.message} (code={response.code})")
+        output = response.output
+        choices = output.get("choices", []) if output else []
+        if not choices:
+            raise RuntimeError("LLM 未返回有效内容")
+        return choices[0].get("message", {}).get("content", "")
 
-    output = response.output
-    choices = output.get("choices", []) if output else []
-    if not choices:
-        raise RuntimeError("LLM 未返回有效内容")
+    # Generation.call 签名只有 **kwargs，没有暴露可直接传参的 timeout；
+    # 裸传 timeout 会被当成模型参数而不是 HTTP 超时（真实超时参数是 request_timeout）。
+    # 这里用线程池包一层，30 秒超时抛异常，由调用方 except 回退关键词启发式。
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    try:
+        future = executor.submit(_request_content)
+        content = future.result(timeout=30)
+    finally:
+        # wait=False：超时时底层线程仍占用网络 socket，不能 wait 等它结束，否则掩盖超时
+        executor.shutdown(wait=False)
 
-    content = choices[0].get("message", {}).get("content", "")
     verdict = _parse_interaction_json(content)
-    # P2-20：证据交叉校验 + 保守默认，避免只信 LLM 输出
-    return _cross_validate(verdict, evidence_text, docs)
+    # P2-20：证据交叉校验 + 保守默认，避免只信 LLM 输出。
+    return _cross_validate(verdict, evidence_text, docs, drug_a, drug_b)
 
 
 def _keyword_heuristic(drug_a, drug_b, docs):

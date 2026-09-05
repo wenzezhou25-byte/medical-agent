@@ -12,7 +12,7 @@ import urllib.parse
 import time
 import concurrent.futures
 from datetime import datetime, timedelta
-from config import BASE_DATA_PATH, GAODE_MAP_KEY, VECTOR_STORE_PATH
+from config import BASE_DATA_PATH, GAODE_MAP_KEY, VECTOR_STORE_PATH, validate_critical_env
 from embedding_provider import get_embeddings
 from rag_utils import (
     _is_low_quality_docs,
@@ -57,6 +57,9 @@ if sys.platform == "win32":
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
     os.environ["PYTHONIOENCODING"] = "utf-8"
+
+# 启动 fail-fast：关键密钥缺失/占位符直接报错，避免配错 .env 后到首次问答才暴露（P2-23/E）
+validate_critical_env()
 
 import streamlit as st
 from vector_store import VectorStore
@@ -303,6 +306,7 @@ def render_login_gate():
                     if ok:
                         st.session_state.is_authenticated = True
                         st.session_state.auth_username = username.strip()
+                        os.environ["CURRENT_USER"] = username.strip()  # 供 storage_io 审计日志记录当前用户
                         # P1-21：记录登录时间戳，用于会话过期判断
                         st.session_state.session_login_ts = time.time()
                         st.session_state.messages = load_chat_history(
@@ -330,24 +334,6 @@ def render_login_gate():
 
 def get_today_date_str():
     return datetime.now().strftime("%Y-%m-%d")
-
-
-def get_current_time_str():
-    return datetime.now().strftime("%H:%M")
-
-
-def is_time_to_take(scheduled_time_str, window_minutes=30):
-    now = datetime.now()
-    try:
-        scheduled = datetime.strptime(scheduled_time_str, "%H:%M").time()
-        scheduled_dt = datetime.combine(now.date(), scheduled)
-        start_window = scheduled_dt - timedelta(minutes=window_minutes)
-        end_window = scheduled_dt + timedelta(minutes=window_minutes)
-        return start_window <= now <= end_window
-    except Exception:
-        print(f"[is_time_to_take] 时间解析失败 value={scheduled_time_str!r}")
-        print(traceback.format_exc())
-        return False
 
 
 # ===================== 工具安全（P1-15 / P1-16） =====================
@@ -398,7 +384,10 @@ def load_vector_store():
         vectorstore = VectorStore.load_local(VECTOR_STORE_PATH, embeddings)
         return vectorstore
     except Exception as e:
-        st.error(f"❌ 加载向量库失败：{e}")
+        # P1-16：异常细节只进日志，用户端只给通用话术
+        print(f"[load_vector_store] 加载向量库失败：{e}")
+        traceback.print_exc()
+        st.error("❌ 加载向量库失败，请稍后重试。")
         return None
 
 
@@ -427,13 +416,16 @@ def build_knowledge_base_from_upload(uploaded_files):
             uploaded_name_map = {}
             for idx, file in enumerate(uploaded_files):
                 uploaded_name_map[idx] = file.name
-                with open(os.path.join(temp_dir, f"{idx}.pdf"), "wb") as f:
+                # P2-10：临时文件名补零，保证字符串序 == 数值序，避免 ≥10 个 PDF 时排序错位
+                with open(os.path.join(temp_dir, f"{idx:04d}.pdf"), "wb") as f:
                     f.write(file.getbuffer())
 
         with st.spinner("🔄 正在构建知识库..."):
             documents = []
             pdf_files = sorted(list(Path(temp_dir).glob("*.pdf")))
             for i, pdf_file in enumerate(pdf_files, 1):
+                # P2-10：从文件名解析原始索引，彻底解耦排序与上传顺序
+                idx_from_name = int(pdf_file.stem)  # "0003" -> 3，直接当 key
                 try:
                     # 原生 PyMuPDF 加载，替换 langchain PyMuPDFLoader
                     with fitz.open(str(pdf_file)) as doc:
@@ -442,7 +434,7 @@ def build_knowledge_base_from_upload(uploaded_files):
                             text = page.get_text()
                             if not text.strip():
                                 continue
-                            original_name = uploaded_name_map.get(i - 1, pdf_file.name)
+                            original_name = uploaded_name_map.get(idx_from_name, pdf_file.name)
                             page_chunks.append(Chunk(
                                 page_content=text,
                                 metadata={
@@ -453,9 +445,10 @@ def build_knowledge_base_from_upload(uploaded_files):
                             ))
                     documents.extend(page_chunks)
                 except Exception as e:
-                    st.warning(f"⚠️ 文件 {i} 处理失败：{e}")
+                    # P1-16：异常细节只进日志，用户端只给通用话术
                     print(f"[build_knowledge_base_from_upload] 文件 {i} 处理失败：{e}")
                     print(traceback.format_exc())
+                    st.warning(f"⚠️ 文件 {i} 处理失败，已跳过。")
 
             if not documents:
                 st.error("❌ 未提取到任何有效文本")
@@ -629,7 +622,10 @@ def build_agent(enable_web_search=False, user_profile=None):
     profile_text = "无特定用户档案信息。"
     if user_profile:
         p_parts = []
-        if user_profile.get('age'): p_parts.append(f"年龄：{user_profile['age']}岁")
+        if user_profile.get('age'):
+            _age_raw = str(user_profile['age']).strip()
+            # 纯数字才拼"岁"；agent 可能存储用户非数值原话（如"三十岁出头"），避免"XX岁岁"式别扭输出
+            p_parts.append(f"年龄：{_age_raw}岁" if re.fullmatch(r"\d+", _age_raw) else f"年龄：{_age_raw}")
         if user_profile.get('gender') and user_profile['gender'] != '未知':
             p_parts.append(f"性别：{user_profile['gender']}")
         if user_profile.get('allergies'):
@@ -670,8 +666,24 @@ def build_agent(enable_web_search=False, user_profile=None):
         _read_agent_metrics().update(kw)
 
     # 当前问题文本：供写工具隔离校验（save_user_medical_record 只收用户本轮直接陈述）。
-    # 经 nonlocal 更新 build_agent 共享 cell，保证 invoke/stream 与工具校验读到同一处。
-    _active_question = ""
+    # 注意不能放 build_agent 闭包 cell——_cached_agent(@st.cache_resource) 会按「联网+档案快照」
+    # 缓存整个 runnable 并跨会话/跨用户共享，闭包变量会互相覆盖导致校验读到别轮/别用户的问题
+    # （同类坑见上方 _AGENT_METRICS_KEY 的 P1-17 注释）。故与指标一样落到 st.session_state 按会话隔离。
+    _ACTIVE_QUESTION_KEY = "_agent_active_question"
+
+    def _read_active_question():
+        return st.session_state.get(_ACTIVE_QUESTION_KEY, "")
+
+    def _set_active_question(q):
+        st.session_state[_ACTIVE_QUESTION_KEY] = q
+
+    # 写值比对用的宽松归一化：去掉空白与分隔性标点后再做子串匹配。
+    # 目的：模型保存时可能改写/加分隔（"青霉素,头孢" vs "青霉素、头孢"），
+    # 纯字面子串会误拒；但只放宽「分隔形式」，不强改词本身，避免放开安全闸门。
+    _SEPARATOR_RE = re.compile(r"[\s\u3000\u00A0，。、；：？！“”‘’（）·—…,.!?;:'\"()\[\]{}/\\|<>《》]+")
+
+    def _norm_for_match(s: str) -> str:
+        return _SEPARATOR_RE.sub("", s or "").strip()
 
     def _rag_handler(query):
         retrieval_start = time.perf_counter()
@@ -711,6 +723,10 @@ def build_agent(enable_web_search=False, user_profile=None):
     def _hospital_handler(location):
         try:
             hospitals = search_nearby_hospitals(location)
+            # P1-16：过滤错误/未配置哨兵行，避免把兜底文案当医院结果回灌给 LLM
+            hospitals = [h for h in hospitals
+                         if "错误" not in h.get("name", "") and "未配置" not in h.get("name", "")
+                         and "失败" not in h.get("name", "") and h.get("location")]
             lines = []
             for h in hospitals:
                 lines.append(f"- {h.get('name','')}，距离 {h.get('distance','-')}，地址 {h.get('address','')}，电话 {h.get('tel','-')}")
@@ -730,10 +746,15 @@ def build_agent(enable_web_search=False, user_profile=None):
                 return "❌ 保存失败：内容为空。"
             if len(cleaned) > _RECORD_VALUE_MAX_LEN:
                 cleaned = cleaned[:_RECORD_VALUE_MAX_LEN]
-            # 写工具隔离（P0-14 层4）：档案值必须来自用户本轮直接陈述，
-            # 防止被恶意检索内容诱导静默改写用户档案。
-            key_text = " ".join(str(key).split())
-            if cleaned not in _active_question and key_text not in _active_question:
+            # 写工具隔离（P0-14 层4）：档案值【必须】来自用户本轮直接陈述，
+            # key 匹配不能单独授权——否则注入内容只要碰巧含类别词（如"过敏史"）
+            # 就能伪造一个用户从未说过的 value 写入，击穿"只写用户明说"的保证。
+            # 因此无条件校验 value 必须出现在当前用户问话中。
+            # 比较做宽松归一化（去掉空白/分隔标点），容忍模型改写分隔形式而不放宽安全闸门；
+            # 归一化后 value 至少保留一定长度，避免纯噪声/单字命中。
+            norm_q = _norm_for_match(_read_active_question())
+            norm_v = _norm_for_match(cleaned)
+            if len(norm_v) < 2 or norm_v not in norm_q:
                 return f"❌ 需要你直接确认：是否要在档案中记录「{key} = {cleaned}」？为避免误写，未作自动保存。"
             profile = load_user_profile(st.session_state.current_user) or {}
             profile[field] = cleaned  # 存原始值；HTML 转义只在渲染时做（见档案页）
@@ -764,7 +785,8 @@ def build_agent(enable_web_search=False, user_profile=None):
                     f"  说明：{reason}\n"
                     f"  建议：{suggestion}"
                 )
-            return "⚠️ 检测到潜在药物相互作用：\n" + "\n".join(lines)
+            # P0-14 层3：reason/suggestion 源自知识库/检索内容，回灌前净化（与 rag/web/hospital 一致）
+            return sanitize_untrusted_text("⚠️ 检测到潜在药物相互作用：\n" + "\n".join(lines))
         except Exception:
             return _safe_error("build_agent.conflict")
 
@@ -802,40 +824,55 @@ def build_agent(enable_web_search=False, user_profile=None):
     class _AgentRunnable:
         """兼容旧 `pre_process | prompt | llm | StrOutputParser()` 的 invoke 接口。"""
 
-        def latest_metrics(self) -> dict:
-            """返回当前问题检索链路的耗时与命中指标（存于 st.session_state，按会话隔离）。"""
-            return dict(_read_agent_metrics())
-
         def _reset_metrics(self):
             _reset_agent_metrics()
 
-        def invoke(self, inputs: dict) -> str:
-            nonlocal _active_question  # 更新 build_agent 共享 cell，供写工具隔离校验读取
+        def _snapshot_metrics(self) -> dict:
+            # 指标仅由 handler 在 agent.run 期间写入 st.session_state；此处调用后一次性快照返回。
+            # 快照是每次调用局部持有，不再经缓存 closure / latest_metrics 跨会话共享。
+            return dict(_read_agent_metrics())
+
+        def invoke(self, inputs: dict):
+            """执行一次问答，返回 (answer, metrics)；metrics 由调用方持有，不作为共享状态。"""
             self._reset_metrics()
             question = inputs.get("question", "")
             history = inputs.get("history") or None
             drug_cache = inputs.get("drug_cache") or None
-            _active_question = question
+            # 写工具隔离读取：写会话隔离的问题文本（勿放闭包，跨会话会串扰）
+            _set_active_question(question)
             answer, _state = agent.run(question, history=history, drug_cache=drug_cache)
-            return answer
+            return answer, self._snapshot_metrics()
 
         def stream(self, inputs: dict, on_status=None):
             """流式回答：逐段 yield 最终回答文本（工具调用中间轮不产出文本）。
 
             on_status(msg) 在阶段切换时回调（思考/检索/生成），供 UI 展示过渡。
+            返回 (stream_generator, metrics_holder)：metrics 需在生成器被完整消费后
+            （末尾 finally 快照）才最终确定，此处由调用方在迭代完成后读取 holder。
             """
-            nonlocal _active_question  # 更新 build_agent 共享 cell，供写工具隔离校验读取
             self._reset_metrics()
             question = inputs.get("question", "")
             history = inputs.get("history") or None
             drug_cache = inputs.get("drug_cache") or None
-            _active_question = question  # 供写工具隔离校验
-            return agent.run_stream(
+            # 写工具隔离读取：写会话隔离的问题文本（勿放闭包，跨会话会串扰）
+            _set_active_question(question)
+            gen = agent.run_stream(
                 question,
                 history=history,
                 drug_cache=drug_cache,
                 on_status=on_status,
             )
+            # 每调用一个局部 holder：生成器消费结束/异常退出时回填最终指标，避免经缓存被跨会话共享。
+            finished = {}
+
+            def _yield_and_finalize():
+                try:
+                    for item in gen:
+                        yield item
+                finally:
+                    finished["metrics"] = self._snapshot_metrics()
+
+            return _yield_and_finalize(), finished
 
     return _AgentRunnable()
 
@@ -1005,10 +1042,10 @@ def render_qa_view():
                     <div class="dose-card {card_state}">
                         <div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-                                <strong style="color:#1E293B; font-size:1.05rem;">{task['name']}</strong>
+                                <strong style="color:#1E293B; font-size:1.05rem;">{html.escape(str(task['name']))}</strong>
                                 {badge}
                             </div>
-                            <div style="color:#475569; font-size:0.85rem;">💊 {task['dosage']}</div>
+                            <div style="color:#475569; font-size:0.85rem;">💊 {html.escape(str(task['dosage']))}</div>
                             <div style="color:#64748B; font-size:0.8rem; margin-top:0.25rem;">{status_text}</div>
                         </div>
                     </div>
@@ -1117,17 +1154,16 @@ def render_qa_view():
                 def _on_status(msg):
                     status_box.caption(msg)
 
-                resp = st.write_stream(
-                    rag_chain.stream(
-                        {"question": prompt, "history": history_msgs,
-                         "drug_cache": _drug_cache_names(prev_drug_cache)},
-                        on_status=_on_status,
-                    )
+                stream_gen, metrics_holder = rag_chain.stream(
+                    {"question": prompt, "history": history_msgs,
+                     "drug_cache": _drug_cache_names(prev_drug_cache)},
+                    on_status=_on_status,
                 )
+                resp = st.write_stream(stream_gen)
                 status_box.empty()  # 生成完成后清空阶段占位
                 st.session_state.drug_cache = next_drug_cache
                 total_ms = (time.perf_counter() - invoke_start) * 1000
-                perf_snapshot = rag_chain.latest_metrics()
+                perf_snapshot = metrics_holder.get("metrics", {})
                 retrieval_ms = float(perf_snapshot.get("retrieval_ms", 0.0))
                 generation_ms = max(total_ms - retrieval_ms, 0.0)
 
@@ -1175,7 +1211,7 @@ def render_qa_view():
                 if str(e) == "knowledge_base_unavailable":
                     error_msg = "⚠️ 当前未加载知识库，请先在「知识库」页面上传 PDF 并构建知识库后再提问。"
                 else:
-                    error_msg = f"❌ 发生错误：{str(e)}"
+                    error_msg = "❌ 发生错误，请稍后重试。"  # P1-8：不向用户泄漏 str(e)，细节只进日志
                 st.error(error_msg)
                 print(traceback.format_exc())
 
@@ -1272,11 +1308,16 @@ def render_meds_view():
         for i, plan in enumerate(med_data["plans"]):
             col = plan_cols[i % len(plan_cols)]
             with col:
+                # P1-15：计划卡片 name/dosage 为用户可控内容，渲染前 HTML 转义消除存储型 XSS
+                _name = html.escape(str(plan.get("name", "")))
+                _dose = html.escape(str(plan.get("dosage") or "未填写"))
+                _freq = html.escape(str(plan.get("frequency", "")))
+                _times = html.escape("、".join(plan.get("times", [])))
                 st.markdown(f"""
                 <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:12px; padding:1rem; margin-bottom:0.75rem;">
-                    <div style="font-weight:600; color:#1E293B; font-size:1.05rem; margin-bottom:0.4rem;">💊 {plan['name']}</div>
-                    <div style="color:#475569; font-size:0.9rem; margin-bottom:0.25rem;">剂量：{plan['dosage'] or '未填写'}</div>
-                    <div style="color:#64748B; font-size:0.85rem;">每天 {plan['frequency']} 次 · {'、'.join(plan['times'])}</div>
+                    <div style="font-weight:600; color:#1E293B; font-size:1.05rem; margin-bottom:0.4rem;">💊 {_name}</div>
+                    <div style="color:#475569; font-size:0.9rem; margin-bottom:0.25rem;">剂量：{_dose}</div>
+                    <div style="color:#64748B; font-size:0.85rem;">每天 {_freq} 次 · {_times}</div>
                 </div>
                 """, unsafe_allow_html=True)
                 if st.button("🗑️ 删除", key=f"del_{plan['id']}_{st.session_state.current_user}", use_container_width=True):
@@ -1338,7 +1379,7 @@ def render_meds_view():
                 existing_drugs = set()
                 profile = load_user_profile(st.session_state.current_user)
                 if profile.get("current_medications"):
-                    meds = re.split(r'[,\n,]', profile["current_medications"])
+                    meds = re.split(r'[,\n]', profile["current_medications"])
                     for m in meds:
                         if m.strip(): existing_drugs.add(m.strip())
 
@@ -1362,13 +1403,19 @@ def render_meds_view():
                     for item in conflict_details:
                         reason = item.get("reason") or (f"命中风险关键词「{item.get('risk_keyword','')}」" if item.get("risk_keyword") else "存在潜在相互作用")
                         suggestion = item.get("suggestion") or "请咨询医生或药师确认是否可以联用。"
+                        # P1-15：冲突详情各字段为知识库/用户可控内容，渲染前统一 HTML 转义消除存储型 XSS
+                        reason = html.escape(reason)
+                        suggestion = html.escape(suggestion)
+                        _pair = html.escape(str(item.get("drug_pair", "")))
+                        _level = html.escape(str(item.get("risk_level", "未知")))
+                        _evidence = html.escape(str(item.get("evidence", "")))
                         st.markdown(f"""
                         <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 10px; margin: 5px 0; border-radius: 4px;">
-                            <strong>❌ 冲突组合</strong>: {item['drug_pair']}<br>
-                            <strong>风险等级</strong>: {item.get('risk_level','未知')}<br>
+                            <strong>❌ 冲突组合</strong>: {_pair}<br>
+                            <strong>风险等级</strong>: {_level}<br>
                             <strong>说明</strong>: {reason}<br>
                             <strong>建议</strong>: {suggestion}<br>
-                            <small>📖 依据：{item['evidence']}</small>
+                            <small>📖 依据：{_evidence}</small>
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -1529,11 +1576,12 @@ def render_hospital_view():
                                     detail["_rank_distance"] = route_distance_m
                                     detail["_route_source"] = "driving"
                                 if "--" not in d_text or "--" not in w_text:
+                                    # 外部数据（高德 info 等）进 HTML 前统一转义，避免 HTML 注入
                                     detail["_route_info_html"] = (
                                         f"<div style='background-color:#EFF6FF; border-left: 4px solid #2563EB; "
                                         f"padding:10px; margin:10px 0; border-radius:4px;'>"
-                                        f"<span style='font-weight:bold; color:#1E3A8A;'>🚗 驾车:</span> {d_text} "
-                                        f"&nbsp;&nbsp;|&nbsp;&nbsp; <span style='font-weight:bold; color:#1E3A8A;'>🚶 步行:</span> {w_text}</div>"
+                                        f"<span style='font-weight:bold; color:#1E3A8A;'>🚗 驾车:</span> {html.escape(d_text)} "
+                                        f"&nbsp;&nbsp;|&nbsp;&nbsp; <span style='font-weight:bold; color:#1E3A8A;'>🚶 步行:</span> {html.escape(w_text)}</div>"
                                     )
                             except Exception:
                                 print(f"[hospital_tab] 路线计算失败 hospital={h.get('name')}")
@@ -1705,7 +1753,11 @@ with st.sidebar:
     if st.button("🚪 退出登录", use_container_width=True):
         st.session_state.is_authenticated = False
         st.session_state.auth_username = ""
+        os.environ.pop("CURRENT_USER", None)  # 登出清除审计用户名，避免残留到下一账号
         st.session_state.pop("session_login_ts", None)  # P1-21：登出同时清除会话时间戳
+        # P1-7：清理跨账号残留（家庭成员选择、药名缓存、检索指标、对话），避免串扰
+        for k in ("drug_cache", "current_user", "perf_stats", "messages"):
+            st.session_state.pop(k, None)
         st.session_state.messages = [{"role": "assistant", "content": DEFAULT_GREETING}]
         st.session_state.current_view = "qa"
         st.rerun()

@@ -17,20 +17,22 @@ import os
 import re
 from typing import Iterable, List
 
-from config import BASE_DIR, get_env
-
-# 默认 provider 取 EMBEDDING_PROVIDER，缺省与 config.EMBEDDING_PROVIDER 一致为 fastembed
-# （原缺省 "auto" 与 config.py 的 "fastembed" 不一致，属窗口期隐患，已统一）。
-DEFAULT_EMBEDDING_PROVIDER = get_env("EMBEDDING_PROVIDER", "fastembed").lower()
-DEFAULT_EMBEDDING_MODEL = get_env("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
-DEFAULT_EMBEDDING_CACHE_DIR = get_env(
-    "EMBEDDING_CACHE_DIR",
-    str(BASE_DIR / ".cache" / "fastembed"),
+from config import (
+    EMBEDDING_PROVIDER,
+    EMBEDDING_MODEL,
+    EMBEDDING_CACHE_DIR,
+    EMBEDDING_DIM,
+    HF_ENDPOINT,
 )
+
+# 所有默认值统一从 config 读取（避免两处解析 source-of-truth 漂移）
+DEFAULT_EMBEDDING_PROVIDER = EMBEDDING_PROVIDER.lower()
+DEFAULT_EMBEDDING_MODEL = EMBEDDING_MODEL
+DEFAULT_EMBEDDING_CACHE_DIR = EMBEDDING_CACHE_DIR
 # EMBEDDING_DIM 仅作为「纯 hash 回退」的兜底维度；fastembed 路径会由 get_embeddings()
 # 把 fallback 维度对齐到主模型（bge 系列 384 维），故不应再被独立用于主模型。
-DEFAULT_HASH_DIM = int(get_env("EMBEDDING_DIM", "512"))
-DEFAULT_HF_ENDPOINT = get_env("HF_ENDPOINT", "")
+DEFAULT_HASH_DIM = int(EMBEDDING_DIM)
+DEFAULT_HF_ENDPOINT = HF_ENDPOINT
 
 
 class LocalHashEmbeddings:
@@ -38,6 +40,13 @@ class LocalHashEmbeddings:
 
     def __init__(self, dimension: int = 512):
         self.dimension = max(128, int(dimension))
+        # 作为 FastEmbed 初始化失败的降级路径时置 True，供上层识别「非语义检索」
+        self._degraded = False
+
+    @property
+    def degraded(self) -> bool:
+        """是否被用作主 embedding 失败后的降级实现（hashing 非语义）。"""
+        return self._degraded
 
     def _tokenize(self, text: str) -> List[str]:
         return re.findall(r"[\u4e00-\u9fff]{1,4}|[A-Za-z0-9][A-Za-z0-9.+-]*", (text or "").lower())
@@ -119,8 +128,13 @@ class FastEmbedEmbeddings:
         return list(map(float, vec))
 
     def get_dim(self) -> int:
-        """探测模型输出维度，首次调用会触发模型加载。"""
-        vec = self.embed_query("")
+        """探测模型输出维度，首次调用会触发模型加载。
+
+        用非空探针探测，避免空串对个别模型返回零向量/触发 StopIteration。
+        """
+        vec = self.embed_query("。")
+        if not vec or all(float(x) == 0.0 for x in vec):
+            raise RuntimeError("embedding 维度探测失败：模型返回空/零向量")
         return len(vec)
 
 
@@ -193,7 +207,10 @@ def get_embeddings():
             fallback = LocalHashEmbeddings(dimension=primary.get_dim())
             return ResilientEmbeddings(primary=primary, fallback=fallback)
         except Exception as exc:
-            print(f"[embedding_provider] FastEmbed 初始化失败，自动回退到 hashing: {exc}")
+            # 显式标注「fastembed 路径实际未生效」并打上 degraded 标志，
+            # 避免上层把 hash 回退误判为语义检索。
+            print(f"[embedding_provider] FastEmbed 初始化/维度探测失败，回退到 hashing（非语义检索）: {exc}")
+            fallback._degraded = True
             return fallback
 
     raise ValueError(f"暂不支持的 embedding provider: {provider}")

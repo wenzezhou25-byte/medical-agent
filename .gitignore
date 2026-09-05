@@ -31,3 +31,10 @@ tmp_*.txt
 .streamlit/secrets.toml
 
 .workbuddy/
+
+# 代码评审修复方案文档（仅供记录，不入版本库）
+code_review_fix_plan.md
+
+# 数据备份与加密前数据（含用户隐私，不入版本库）
+/data_backup_20260904/
+/data/backup_before_encrypt_*/

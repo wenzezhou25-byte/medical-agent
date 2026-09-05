@@ -56,18 +56,21 @@ class Chunk:
 # ---------------------------------------------------------------------------
 CHUNK_SIZE = 900
 CHUNK_OVERLAP = 180
-_DEFAULT_SEPARATORS = ["\n\n", "\n", "。", "；", "！", "？", "：", "，", " "]
+_DEFAULT_SEPARATORS = ["\n\n", "\n", "。", "；", "！", "？", "：", "，", " ", ""]
 
 # 剂量/次数 token：硬切长文本时绝不在这些 token 中间切断（P2-13）
-_DOSE_TOKEN = re.compile(r"\d+(?:\.\d+)*\s*(?:mg|ml|g|ug|iu|单位|毫克|毫升|克|片|粒|次|天|日|袋|支|丸|滴|粒)")
+_DOSE_TOKEN = re.compile(r"\d+(?:\.\d+)*\s*(?:mg|ml|g|ug|iu|单位|毫克|毫升|克|片|粒|次|天|日|袋|支|丸|滴)")
 
 
 def _safe_hard_cut(text: str, chunk_size: int) -> List[str]:
     """在无分隔符的兜底路径上硬切超长段，但避免在剂量/次数 token 中间切断。
 
-    在 [start, start+chunk_size) 窗口内找最后一个剂量 token 的结束位置，若它落在
-    窗口内部且剩余较短，则选择在其后切断而非机械地从 900 处拦腰截断，
+    在 [start, start+chunk_size) 窗口内找最后一个剂量 token 的结束位置，若它位于
+    窗口的「中后段」且剩余较短，则选择在其后切断而非机械地从 900 处拦腰截断，
     从而保住“一日3次”“500mg”这类剂量表述不被拆成两半。
+
+    下限约束：仅当剂量边界已推进超过窗口一半（best - start > chunk_size / 2）才
+    采用剂量切点，避免窗口开头恰有剂量 token 时把 chunk 切得过短。
     """
     if len(text) <= chunk_size:
         return [text]
@@ -81,29 +84,29 @@ def _safe_hard_cut(text: str, chunk_size: int) -> List[str]:
         for m in _DOSE_TOKEN.finditer(text, start, limit):
             if m.end() > best:
                 best = m.end()
-        if best > start and limit - best < chunk_size:
+        if best - start > chunk_size // 2 and limit - best < chunk_size:
             cut = best
         out.append(text[start:cut])
         start = cut
     return out or [text]
 
 
-def _split_text_with_regex(text: str, separator: Optional[str]) -> List[str]:
+def _split_text_with_regex(text: str, separator: Optional[str], chunk_size: int) -> List[str]:
     """按单个分隔符把 text 切成多段，分隔符不保留（与默认 keep_separator=False 一致）。"""
     if not separator:  # 无有效分隔符 -> 先按句级标点切自然边界，仍超长的段再做保护剂量的硬切
         pieces = [s for s in re.split(r"(?<=[。！？；\n])", text) if s] or [text]
         out: List[str] = []
         for p in pieces:
-            if len(p) <= CHUNK_SIZE:
+            if len(p) <= chunk_size:
                 out.append(p)
             else:
-                out.extend(_safe_hard_cut(p, CHUNK_SIZE))
+                out.extend(_safe_hard_cut(p, chunk_size))
         return out
     return re.split(re.escape(separator), text)
 
 
-def _join_docs(docs: Sequence[str], separator: str) -> Optional[str]:
-    joined = separator.join(docs).strip()
+def _join_docs(docs: Sequence[str], separator: Optional[str]) -> Optional[str]:
+    joined = (separator or "").join(docs).strip()
     return joined if joined else None
 
 
@@ -156,20 +159,21 @@ def split_text_recursive(
             break
 
     _separator = separator if separator != "" else None
-    splits = _split_text_with_regex(text, _separator)
+    splits = _split_text_with_regex(text, _separator, chunk_size)
     _good_splits = [s for s in splits if s] or [text]
 
     _all_splits: List[str] = []
     for _s in _good_splits:
         if len(_s) < chunk_size:
             _all_splits.append(_s)
+        elif _separator is not None and len(_good_splits) > 1:
+            # 本层确有细分出多段 -> 对超长段继续递归细分
+            _all_splits.extend(
+                split_text_recursive(_s, new_separators or seps, chunk_size, chunk_overlap)
+            )
         else:
-            if _separator is not None:
-                _all_splits.extend(
-                    split_text_recursive(_s, new_separators or seps, chunk_size, chunk_overlap)
-                )
-            else:
-                _all_splits.append(_s)
+            # 无可细分 separator（本层只切出整段）-> 保护剂量的硬切兜底，终止递归
+            _all_splits.extend(_safe_hard_cut(_s, chunk_size))
 
     final_chunks.extend(_merge_splits(_all_splits, _separator, chunk_size, chunk_overlap))
     return final_chunks

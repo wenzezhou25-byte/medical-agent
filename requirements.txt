@@ -9,3 +9,9 @@ fastembed>=0.3,<1.0
 
 # fastembed 隐式依赖，缺失会导致运行报 No module named 'pandas'
 pandas>=2.0,<3.0
+
+# 健康数据落盘加密（storage_io 的 Fernet 对称加密，密钥见 DATA_ENC_KEY）
+cryptography>=42,<46
+
+# 测试框架（tests/ 下的 pytest 用例）
+pytest>=8,<9

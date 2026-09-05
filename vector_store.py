@@ -294,7 +294,7 @@ class VectorStore:
                 cur_dim = int(embedding_function.get_dim())
             else:
                 try:
-                    cur_dim = len(embedding_function.embed_query(""))
+                    cur_dim = len(embedding_function.embed_query("。"))
                 except Exception:
                     cur_dim = None
             if cur_dim is not None and cur_dim != index.d:

@@ -5,9 +5,9 @@
 以及多用户列表枚举。不依赖 Streamlit。
 """
 import os
-import json
 import traceback
 from config import BASE_DATA_PATH
+from storage_io import load_json, atomic_write_json_encrypted
 
 
 def get_safe_user_id(user_id):
@@ -31,36 +31,23 @@ def get_chat_history_path(username):
     return os.path.join(BASE_DATA_PATH, f"chat_history_{safe_name}.json")
 
 
-def _atomic_write_json(path, data):
-    """原子写 JSON：先写同目录临时文件，再 os.replace 覆盖。
-
-    改写了原来直接 open('w') 覆盖的方案：中途崩溃/断电不会留下半截损坏文件
-    （P1-22），与 auth.py 的 tmp+replace 落盘方式保持一致。
-    """
-    tmp = path + ".tmp"
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-        f.flush()
-        os.fsync(f.fileno())  # 刷到磁盘，进一步降低断电丢数据
-    os.replace(tmp, path)
-
-
 def load_user_profile(user_id="default"):
     path = get_user_profile_path(user_id)
-    if os.path.exists(path):
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            print(f"[load_user_profile] 读取失败 path={path}")
-            print(traceback.format_exc())
-    return {"age": "", "gender": "未知", "allergies": "", "chronic_diseases": "", "current_medications": ""}
+    try:
+        data = load_json(path)
+    except Exception:
+        print(f"[load_user_profile] 读取失败 path={path}")
+        print(traceback.format_exc())
+        return {"age": "", "gender": "未知", "allergies": "", "chronic_diseases": "", "current_medications": ""}
+    if data is None:
+        return {"age": "", "gender": "未知", "allergies": "", "chronic_diseases": "", "current_medications": ""}
+    return data
 
 
 def save_user_profile(profile, user_id="default"):
     path = get_user_profile_path(user_id)
     try:
-        _atomic_write_json(path, profile)
+        atomic_write_json_encrypted(path, profile)
     except Exception:
         print(f"[save_user_profile] 写入失败 path={path}")
         print(traceback.format_exc())
@@ -69,34 +56,35 @@ def save_user_profile(profile, user_id="default"):
 
 def load_medication_data(user_id="default"):
     path = get_user_med_log_path(user_id)
-    if os.path.exists(path):
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            print(f"[load_medication_data] 读取失败 path={path}")
-            print(traceback.format_exc())
-    return {"plans": [], "logs": {}}
+    try:
+        data = load_json(path)
+    except Exception:
+        print(f"[load_medication_data] 读取失败 path={path}")
+        print(traceback.format_exc())
+        return {"plans": [], "logs": {}}
+    if data is None:
+        return {"plans": [], "logs": {}}
+    return data
 
 
 def save_medication_data(data, user_id="default"):
     path = get_user_med_log_path(user_id)
-    _atomic_write_json(path, data)
+    atomic_write_json_encrypted(path, data)
 
 
 def load_chat_history(username, greeting=None, max_rounds=30):
     """按登录账号加载最近 max_rounds 轮对话历史（每轮含用户+助手两条）。"""
     path = get_chat_history_path(username)
-    if os.path.exists(path):
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            messages = data.get("messages", [])
-            if messages:
-                return messages[-(max_rounds * 2):]
-        except Exception:
-            print(f"[load_chat_history] 读取失败 path={path}")
-            print(traceback.format_exc())
+    try:
+        data = load_json(path)
+    except Exception:
+        print(f"[load_chat_history] 读取失败 path={path}")
+        print(traceback.format_exc())
+        return [{"role": "assistant", "content": greeting}] if greeting else []
+    if data:
+        messages = data.get("messages", [])
+        if messages:
+            return messages[-(max_rounds * 2):]
     return [{"role": "assistant", "content": greeting}] if greeting else []
 
 
@@ -109,7 +97,7 @@ def save_chat_history(messages, username, max_rounds=30, greeting=None):
             if not (greeting and msg.get("role") == "assistant" and msg.get("content") == greeting)
         ]
         trimmed = filtered[-(max_rounds * 2):]
-        _atomic_write_json(path, {"messages": trimmed})
+        atomic_write_json_encrypted(path, {"messages": trimmed})
     except Exception:
         print(f"[save_chat_history] 写入失败 path={path}")
         print(traceback.format_exc())

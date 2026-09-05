@@ -4,7 +4,7 @@
 只测试纯逻辑（无需向量库/联网/UI），LLM 实调为可选步骤（网络不可用时跳过）。
 
 运行：
-    D:\\ananconda3\\python.exe smoke_test.py
+    D:\\ananconda3\\envs\\medical_agent\\python.exe smoke_test.py
 """
 from drug_interaction import (
     _build_interaction_prompt,

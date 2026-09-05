@@ -404,13 +404,13 @@ class ToolRegistry:
         tool = self.get_tool(name)
         if tool is None:
             return "❌ 未找到工具: %s" % name
+        # 阻塞时长由各 handler 内部自带 timeout 约束（联网 20s、医院搜索整体 deadline、其余本地），
+        # 不在本层套线程池——handler 需读写 st.session_state，跨线程执行会导致指标/档案写入丢失或异常。
         try:
             return tool.handler(args)
         except Exception as e:
-            # P1-16：异常细节只进日志，回灌给模型/用户的用通用话术，避免泄漏内部路径/堆栈
+            # P1-16：异常细节只进日志（exc_info=True 已含完整堆栈），回灌给模型/用户用通用话术
             _log.error("工具 %s 执行异常: %s", name, e, exc_info=True)
-            import traceback
-            traceback.print_exc()
             return "工具执行失败，请稍后重试。"
 
 
@@ -559,7 +559,9 @@ class AgentCore:
                 try:
                     args = json.loads(arguments)
                 except json.JSONDecodeError as e:
-                    result = "❌ 参数解析失败: %s" % str(e)
+                    # P1-16：解析失败细节只进日志，回灌通用话术，避免把内部异常拼接给模型
+                    _log.error("参数 JSON 解析失败 [%s]: %s", name, e, exc_info=True)
+                    result = "❌ 参数解析失败，请重新以合法 JSON 提交参数。"
                     args = {}
             else:
                 args = arguments or {}

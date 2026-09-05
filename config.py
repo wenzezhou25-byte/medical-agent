@@ -30,7 +30,8 @@ def get_required_env(name: str) -> str:
 
 load_environment()
 
-DASHSCOPE_API_KEY = get_env("DASHSCOPE_API_KEY")
+# DASHSCOPE_API_KEY 不在此读为模块常量：消费方（agent_core/drug_interaction）
+# 通过 get_required_env 在用时校验，避免产生"配了没生效"的死常量（P2-23/D）。
 TAVILY_API_KEY = get_env("TAVILY_API_KEY")
 GAODE_MAP_KEY = get_env("GAODE_MAP_KEY")
 EMBEDDING_PROVIDER = get_env("EMBEDDING_PROVIDER", "fastembed")
@@ -67,3 +68,47 @@ if RERANK_ENABLED and os.path.isdir(
 # 具体可由主程序判定逻辑读取这些常量，便于统一调参与单测。
 LOW_QUALITY_RULE_THRESHOLD = float(get_env("LOW_QUALITY_RULE_THRESHOLD", "0.0"))
 LOW_QUALITY_CROSS_THRESHOLD = float(get_env("LOW_QUALITY_CROSS_THRESHOLD", "0.25"))
+
+
+def validate_critical_env(required=("DASHSCOPE_API_KEY",), optional=("TAVILY_API_KEY", "GAODE_MAP_KEY", "LLM_MODEL")):
+    """启动时一次性校验环境变量（P2-23/E）：
+
+    - 关键密钥（缺省 DASHSCOPE_API_KEY）缺失或仍是占位符 → 直接抛错，fail-fast；
+    - 可选密钥 / 模型名未配置或仍为占位符 → 仅打印告警，功能降级但不阻断启动。
+
+    注意：`LLM_MODEL` 等项在代码里定义了默认值（见本模块常量），其默认值不会写入
+    os.environ，因此完全未配置等价于走默认，不应视为缺失；只有**显式配置成占位符**
+    时才告警。
+    """
+    # 这些项在模块里存在代码默认，未显式配置时不算缺失。
+    keys_with_default = {"LLM_MODEL"}
+
+    def _explicit_value(name):
+        # 取 .env / 系统变量的显式配置；未配置返回 None（与 get_env 的代码默认区分开）
+        return os.environ.get(name)
+
+    def _is_placeholder(value):
+        value = (value or "").strip()
+        if not value:
+            return True
+        lower = value.lower()
+        return lower.startswith(("your-", "xxx")) or "placeholder" in lower
+
+    missing_required = [n for n in required if _is_placeholder(_explicit_value(n))]
+    missing_optional = []
+    for n in optional:
+        value = _explicit_value(n)
+        if value is None:
+            if n not in keys_with_default:
+                missing_optional.append(n)
+        elif _is_placeholder(value):
+            missing_optional.append(n)
+    for name in missing_optional:
+        print(f"[config] 可选环境变量未配置或仍为占位符，相关功能将降级: {name}")
+    if missing_required:
+        raise ValueError(
+            "关键环境变量缺失或仍为占位符，无法启动智能医疗助手: "
+            + ", ".join(missing_required)
+            + "。请在 .env 或系统环境变量中配置后重试。"
+        )
+    return missing_required, missing_optional

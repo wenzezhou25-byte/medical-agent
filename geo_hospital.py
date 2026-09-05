@@ -4,6 +4,7 @@
 从 app.py 拆出。不依赖 Streamlit。
 """
 import requests
+import time
 import traceback
 from config import GAODE_MAP_KEY
 
@@ -201,12 +202,22 @@ def search_nearby_hospitals(location, radius=NEARBY_HOSPITAL_RADIUS):
         HIGH_QUALITY_THRESHOLD = 20
         high_quality_count = 0
 
+        # P1-18：整个关键词搜索设整体 deadline（秒）。正常城市 1~2 个关键词即可满足早停阈值；
+        # 稀疏/乡村区域容易全部超时，此时不干等 8×timeout，到时即返回已收集的部分结果。
+        _SEARCH_DEADLINE = 4.0
+        _search_start = time.time()
+
         for kw in keywords:
+            # 整体 deadline 检查：剩余结果已够展示或已超时限时提前收尾
+            if time.time() - _search_start >= _SEARCH_DEADLINE:
+                print(f"[search_nearby_hospitals] 超过整体时限 {_SEARCH_DEADLINE}s，停止剩余关键词 "
+                      f"collected={len(hospitals)} high_quality={high_quality_count}")
+                break
             try:
                 search_resp = requests.get("https://restapi.amap.com/v3/place/around", params={
                     "location": location, "keywords": kw,
                     "radius": radius, "key": GAODE_MAP_KEY, "output": "json", "offset": 50
-                }, timeout=5)
+                }, timeout=3)
                 search_data = search_resp.json()
                 if search_data.get("status") != "1":
                     info = search_data.get("info") or "未知错误"
@@ -287,7 +298,8 @@ def search_nearby_hospitals(location, radius=NEARBY_HOSPITAL_RADIUS):
         # 限制最多 50 个候选：按 POI 距离取最近的 50 个，避免后续路线规划过多
         hospitals.sort(key=lambda x: _parse_distance(x["distance"]))
         return hospitals[:50]
-    except Exception as e:
+    except Exception:
         print("[search_nearby_hospitals] 网络请求异常")
         print(traceback.format_exc())
-        return [{"name": "❌ 网络请求错误", "address": str(e), "distance": "-", "tel": "-", "location": ""}]
+        # P1-16：不向用户回灌异常明细，仅返回通用兜底文案
+        return [{"name": "❌ 附近医院查询失败，请稍后重试", "address": "", "distance": "-", "tel": "-", "location": ""}]
